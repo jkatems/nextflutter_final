@@ -1,0 +1,107 @@
+{
+  "@@locale": "fr",
+  "appName": "FocusFlow",
+  "home": "Vue d’ensemble",
+  "tasks": "Mes tâches",
+  "stats": "Statistiques",
+  "settings": "Paramètres",
+  "greeting": "Un peu de clarté,\nbeaucoup de possibilités.",
+  "welcome": "VOTRE ESPACE PERSONNEL",
+  "subtitle": "Faites de la place à ce qui compte vraiment.",
+  "newTask": "Nouvelle tâche",
+  "today": "Votre prochain pas",
+  "seeAll": "Tout voir",
+  "heroTitle": "Une chose à la fois.",
+  "heroBody": "Les grandes idées commencent par de petits pas.\nChoisissez votre prochaine action.",
+  "heroAction": "Organiser ma journée",
+  "total": "Au total",
+  "pending": "À faire",
+  "completed": "Terminées",
+  "progress": "Votre progression",
+  "spaces": "À chacun son espace",
+  "work": "Travail",
+  "personal": "Personnel",
+  "wellbeing": "Bien-être",
+  "all": "Toutes",
+  "search": "Rechercher une tâche",
+  "emptyTitle": "L’esprit libre.",
+  "emptyBody": "Aucune tâche ici. Créez votre prochaine petite victoire.",
+  "noResults": "Aucun résultat",
+  "noResultsBody": "Essayez un autre mot ou modifiez vos filtres.",
+  "title": "Titre",
+  "notes": "Notes",
+  "category": "Espace",
+  "priority": "Priorité",
+  "low": "Douce",
+  "medium": "Normale",
+  "high": "Haute",
+  "dueDate": "Échéance",
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "requiredTitle": "Ajoutez un titre pour continuer.",
+  "longTitle": "100 caractères maximum.",
+  "longNotes": "2 000 caractères maximum.",
+  "editTask": "Modifier la tâche",
+  "taskDetail": "Le détail compte",
+  "markDone": "Marquer comme terminée",
+  "markPending": "Remettre à faire",
+  "delete": "Supprimer",
+  "deleteTitle": "Supprimer cette tâche ?",
+  "deleteBody": "Cette action est définitive. Vos autres tâches seront conservées.",
+  "noNotes": "Aucune note pour le moment.",
+  "overdue": "En retard",
+  "language": "Langue",
+  "appearance": "Apparence",
+  "darkMode": "Mode sombre",
+  "localFirst": "Votre quotidien reste le vôtre.",
+  "privacyBody": "Vos tâches sont enregistrées sur cet appareil. Aucun compte, aucune publicité, aucun transfert de données. Pensez à conserver une copie de vos informations importantes : désinstaller l’application ou effacer les données du navigateur supprime cette sauvegarde.",
+  "about": "À propos",
+  "version": "Version 1.2.0 · Fait pour avancer sereinement",
+  "settingsSubtitle": "Un espace qui vous ressemble.",
+  "statsSubtitle": "Chaque petit pas mérite d’être remarqué.",
+  "completionRate": "Taux de réalisation",
+  "byCategory": "Votre équilibre",
+  "statsNote": "Ces chiffres reflètent les tâches actuellement enregistrées, toutes échéances confondues.",
+  "loadError": "Impossible de lire vos données. Elles ont été conservées. Réessayez après avoir vérifié le stockage.",
+  "saveError": "Enregistrement impossible. Votre modification n’a pas été appliquée. Vérifiez le stockage et réessayez.",
+  "retry": "Réessayer",
+  "offline": "Hors ligne, l’esprit tranquille",
+  "back": "Retour",
+  "taskMissing": "Cette tâche n’existe plus.",
+  "demoNotice": "Quelques tâches d’exemple pour commencer. Adaptez-les à votre quotidien.",
+  "taskSaved": "Tâche enregistrée",
+  "taskDeleted": "Tâche supprimée",
+  "themeHint": "Un affichage plus doux quand la lumière baisse.",
+  "countTasks": "{count, plural, =0{Aucune tâche} =1{1 tâche} other{{count} tâches}}",
+  "@countTasks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "completeTask": "Terminer : {title}",
+  "@completeTask": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reopenTask": "Rouvrir : {title}",
+  "@reopenTask": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "openTask": "Ouvrir : {title}",
+  "@openTask": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
+}
