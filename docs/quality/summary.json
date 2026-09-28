@@ -1,0 +1,419 @@
+{
+  "generated_utc": "2026-09-28T15:39:36.114215+00:00",
+  "success": true,
+  "counts": {
+    "unit": 40,
+    "widget": 19
+  },
+  "passed": 59,
+  "skipped": 0,
+  "business_coverage": {
+    "covered": 165,
+    "lines": 167,
+    "percent": 98.8
+  },
+  "source_sha256": "5257d713c4e48f8a0474f263de1080cd74a036bbce2d6381b855a5d19b631eac",
+  "source_files": {
+    "integration_test/app_test.dart": "b1bb1583c37f754800f94eb6284795646a0ac30ee19fd19f007e6c3cdfe0f002",
+    "integration_test/performance_test.dart": "38897c0fadbe45e55b55949930957ff2756aa6515d0a965740379d0cf7ea0612",
+    "lib/bootstrap.dart": "487a6db28718aedfd609fd941a66228906e1dfbe8f96e4b4ddd5faf689625471",
+    "lib/data/demo_snapshot.dart": "765079fc0127c5ad3d6507e97baf914252b10d0c5026f9f6e56c6b515cb9ca6b",
+    "lib/data/preferences_repository.dart": "63acbbc646d32d0ee231aa59fbb3ee890e0b325ab2285fb3520a492f9df98e9f",
+    "lib/domain/app_repository.dart": "9e4e5bd39c4b2584296fb0a46235a1150b79b52a936a9db0ba3a7781db11fb78",
+    "lib/domain/app_snapshot.dart": "2112999c92b026d02a9fe82b9203498c0e75a7cb1724603f5f0dadce312c37f1",
+    "lib/domain/task.dart": "31fee5c6c8e939d0ee98cfb4162712005d5e68177fdc53b6850365a80621766e",
+    "lib/l10n/app_localizations.dart": "002605309e684419abd7dfd9b85ebbc62a6d3d49b6343bac677576da9260c5ac",
+    "lib/l10n/app_localizations_en.dart": "b1f08126fa5f3e0f4a1cbd24950ee818add128eeaa1ec471bb75355561a3dfc7",
+    "lib/l10n/app_localizations_fr.dart": "acd6f5d30fe519521c37fc12c63aacf85b802c387fd1635779905671a5cc731a",
+    "lib/main.dart": "0486d1e137e52f699405f3ef547d01a93ecda3962bd2df9ee75ebf31b6187346",
+    "lib/state/app_controller.dart": "83372cb452b57e35c43a4a0d561162840544da65d93230ec315dfc5d071c4527",
+    "lib/ui/app.dart": "d000a0b651eecc221599c4e6ca2ee0361a4faff49fc89a40479b7629240273fd",
+    "lib/ui/app_shell.dart": "56f3e9fb6e0747268c5110d958ffc4ee2a02733f109fff8dfbef4c2d4b70431a",
+    "lib/ui/formatters.dart": "3d8a183113867566e7474a00ad4c70f792da7179f10712a9cd721b7389bd8775",
+    "lib/ui/navigation.dart": "7ca7a98fc2e5c29f66d78b72ba7d0e59afd9a8eb1bc3d1a1b1faee8f92b6b832",
+    "lib/ui/screens/home_screen.dart": "a1ff6757519ce857128fe6107a6e0d627d8ff9a4c312a64b194159b0f9f40a85",
+    "lib/ui/screens/settings_screen.dart": "325513e5f816aa222699c2f876cc4d38d713f104fe545d501c0a46888e6529a2",
+    "lib/ui/screens/stats_screen.dart": "6e6cb85016a77047a6ceec7f78c737669f52081378c3570814fa22fc98b3444b",
+    "lib/ui/screens/task_detail_screen.dart": "c45453f4fd8e0ebdfe26b093b9ca311084ff739c40594dc02640ce4063b69f0e",
+    "lib/ui/screens/task_editor_screen.dart": "dd38e79fa62e48a81e002e384fe2d254da46a5c22a826bbc72520123021d1669",
+    "lib/ui/screens/tasks_screen.dart": "98b4cd6abea900d3e7935f1f3ff2eb5c37f85b7c2a27489e3bf8d08e9bb08026",
+    "lib/ui/theme/app_theme.dart": "5e696d52456278e28d3bdf5ef523192ddfc2074f686706c7ce1026e6faef0740",
+    "lib/ui/widgets/brand.dart": "529b988cabaa109b17fdaf10e9402c6461302beb33b8e5dcae510559f42616c1",
+    "lib/ui/widgets/empty_state.dart": "b2e655fab79d16b64ec09d895f0c57ad1225eb1f4679f868dc41566cfcd4c206",
+    "lib/ui/widgets/page_body.dart": "bf7dffb2ac0fc3dc08071b3282b390be52fd8acc84e690639449f69c7a5a0839",
+    "lib/ui/widgets/page_header.dart": "ca225d04c577e2ac20b8bd5b64643d3ab836f07d7982e52a19ffb56bb3b3cfb4",
+    "lib/ui/widgets/stat_card.dart": "5328efc57cb6076971227a1ec7ede0e9e8a5fc8217cf69d1cb1fe58873515eb3",
+    "lib/ui/widgets/task_tile.dart": "b21e40f6776de2feee2298eed5de03ace5285acc6985ed03bce6ffc592c15ab2",
+    "lib/ui/widgets/widgets.dart": "c9231f9a12953ec289f2ee9306cb3247d3345f0243928169dfb0984126a7646f",
+    "test/helpers.dart": "009ee8ac44b786767b9456074d06623d4810e4510f49beba5e45bbe90d295817",
+    "test/unit/controller_test.dart": "ae4abab41dcf1e1762f52273cf2fb0ee9d8a8b2377295cac2c2991ec26941c99",
+    "test/unit/repository_test.dart": "275f275fade1d86da6869b2443e05a675cf5b7f174e491330ef2d6133aab916e",
+    "test/unit/state_boundaries_test.dart": "5529ee53d78b9c273c0e032e80baae8cdd7539c07de477e47cc73dd82a6050b5",
+    "test/unit/storage_isolation_test.dart": "7a315f7ab6ae02285b7f1ef387f74cbc6df52c193fcb618f2e643dbf1c6414cf",
+    "test/unit/task_test.dart": "d0abb72373a12247c69cd08689101f7512f6b5d4e0f3cb1c7debdb4adbac6abf",
+    "test/widget_harness.dart": "22795bbb0fafce04dff4d367569bb48a25cbc8f189a1bbc74255e32315a54c67",
+    "test/widgets/accessibility_test.dart": "2781efc296b7fb312ba74953f00502c3bb6641d8e861ebb17050baedf1aee6ef",
+    "test/widgets/app_test.dart": "30d6238a8faa45116bc65e6dfb71c52da8e5773be15c24e654afe65e15705557",
+    "test/widgets/lazy_loading_test.dart": "87539217296f116f96379b4902f9e6a346b80f6af11a2713af0a7b8deafc8cd2",
+    "test_driver/integration_test.dart": "00755473f1d8511b9f701373c14a9ca3b41e30239fb1e4f980ccb7b098180dba",
+    "test_driver/performance.dart": "2f80a384a6d27eaff7c355e92644a0ab171504857103a4d53579236e8ecdb05f",
+    "pubspec.yaml": "250a2f94d811fb08f050772fd32599bb77e79536167c388995a1a9b018472cb8",
+    "pubspec.lock": "72fbaa3edc236c2dd1e0aa76ebca9b8e5517151b2c5f66ece9f1b82045134724"
+  },
+  "tests": [
+    {
+      "name": "Task and validation JSON roundtrip preserves every field",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Task and validation copy keeps identity and leaves original immutable",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Task and validation empty and whitespace title are rejected",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Task and validation title boundary is 100 characters after trimming",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Task and validation due today is not overdue even at night",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Task and validation yesterday is overdue only while pending",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Task and validation invalid serialized title is rejected",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Filtering and statistics query matches case insensitively with whitespace",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Filtering and statistics query also searches notes",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Filtering and statistics category and completion filters combine",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Filtering and statistics sort puts pending tasks first ordered by date",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Filtering and statistics empty stats never divide by zero",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "Filtering and statistics stats reflect completed and pending totals",
+      "path": "test/unit/task_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "fresh storage returns null",
+      "path": "test/unit/repository_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "real preferences adapter persists tasks and settings",
+      "path": "test/unit/repository_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "empty list is preserved and does not reseed demo",
+      "path": "test/unit/repository_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "corrupt persisted data raises without overwriting it",
+      "path": "test/unit/repository_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "unknown schema is rejected",
+      "path": "test/unit/repository_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "duplicate task identifiers are rejected",
+      "path": "test/unit/repository_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "snapshot list cannot be externally mutated",
+      "path": "test/unit/repository_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "first launch saves initial sample once",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "add trims title and persists",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "blank task is rejected without save",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "long notes are rejected",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "IDs remain unique with a frozen clock",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "editing preserves completion and ID",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "unknown IDs do not insert or delete other tasks",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "toggle and delete persist correctly",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "failed write keeps previous state and permits retry",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "read error preserves repository and blocks mutation until retry",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "language and theme survive controller recreation",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "simultaneous saves cannot overwrite each other",
+      "path": "test/unit/controller_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "save error dismissal notifies UI without writing",
+      "path": "test/unit/state_boundaries_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "read failure cannot be dismissed to bypass recovery",
+      "path": "test/unit/state_boundaries_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "task updates do not notify application theme or locale",
+      "path": "test/unit/state_boundaries_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "initial snapshot is injected and respects the injected clock",
+      "path": "test/unit/state_boundaries_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "controller default has no dependency on demo data",
+      "path": "test/unit/state_boundaries_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "disposing during a write does not notify a disposed listener",
+      "path": "test/unit/state_boundaries_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "initialization cannot race an in-flight write",
+      "path": "test/unit/state_boundaries_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "integration and benchmark storage never overwrite user data",
+      "path": "test/unit/storage_isolation_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "six screens expose labels, touch targets and contrast: fr / dark=false",
+      "path": "test/widgets/accessibility_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "six screens expose labels, touch targets and contrast: fr / dark=true",
+      "path": "test/widgets/accessibility_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "six screens expose labels, touch targets and contrast: en / dark=false",
+      "path": "test/widgets/accessibility_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "six screens expose labels, touch targets and contrast: en / dark=true",
+      "path": "test/widgets/accessibility_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "completion semantics changes from complete to reopen",
+      "path": "test/widgets/accessibility_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "overview renders and opens task list",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "1000 tasks mount only the visible rows and viewport cache",
+      "path": "test/widgets/lazy_loading_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "blank title shows accessible validation",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "create form persists then closes",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "search handles no results and matching text",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "completion filter reacts immediately",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "language switch translates navigation and content",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "dark mode changes app theme",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "delete requires confirmation and cancel preserves data",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "storage failure keeps editor and user input",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "all navigation screens fit a 320px display at 200% text",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "desktop navigation adapts without bottom bar",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "interactive targets have semantic labels and sufficient size",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "name": "read failure displays retry and recovers",
+      "path": "test/widgets/app_test.dart",
+      "result": "success",
+      "skipped": false
+    }
+  ]
+}

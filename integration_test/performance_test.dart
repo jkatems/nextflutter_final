@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:focus_flow/data/app_repository.dart';
+import 'package:focus_flow/domain/app_snapshot.dart';
+import 'package:focus_flow/data/preferences_repository.dart';
 import 'package:focus_flow/domain/task.dart';
 import 'package:focus_flow/state/app_controller.dart';
 import 'package:focus_flow/ui/app.dart';
@@ -14,7 +15,10 @@ void main() {
     tester,
   ) async {
     final preferences = await SharedPreferences.getInstance();
-    final repository = PreferencesRepository(preferences);
+    final repository = PreferencesRepository(
+      preferences: preferences,
+      key: 'focusflow.performance-test.v1',
+    );
     final original = await repository.load();
     try {
       await repository.save(
@@ -64,7 +68,7 @@ void main() {
       if (original != null) {
         await repository.save(original);
       } else {
-        await preferences.remove(PreferencesRepository.storageKey);
+        await preferences.remove(repository.key);
       }
     }
   });

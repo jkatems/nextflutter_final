@@ -180,7 +180,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about => 'About';
 
   @override
-  String get version => 'Version 1.2.0 · A little more focused';
+  String get version => 'Version 1.3.0 · A little more focused';
 
   @override
   String get settingsSubtitle => 'Make yourself at home.';

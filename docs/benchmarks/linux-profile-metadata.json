@@ -1,0 +1,8 @@
+{
+  "generated_utc": "2026-09-28T15:46:31.251938+00:00",
+  "mode": "profile",
+  "platform": "Linux-7.2.5-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "source_sha256": "5257d713c4e48f8a0474f263de1080cd74a036bbce2d6381b855a5d19b631eac",
+  "command": "flutter drive --no-pub --profile -d linux --driver=test_driver/performance.dart --target=integration_test/performance_test.dart",
+  "assertions_passed": true
+}

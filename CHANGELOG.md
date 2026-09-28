@@ -1,6 +1,22 @@
 # Changelog
 
-Les versions ci-dessous documentent les trois incréments fonctionnels réalisés pour ce livrable. Elles ne représentent pas des publications historiques sur les stores.
+Les versions ci-dessous documentent les incréments fonctionnels réalisés pour ce livrable. Elles ne représentent pas des publications historiques sur les stores.
+
+## [1.3.0] — 2026-09-28
+
+### Corrigé
+- Contrat de persistance placé dans le domaine ; contrôleur indépendant de l’adaptateur SharedPreferences.
+- État en lecture seule, erreurs typées et effacement d’erreur via commande ; notification sûre après une sauvegarde terminée après `dispose`.
+- Stockage d’intégration et de benchmark isolé des données utilisateur.
+- Build Android CI : retrait de `--no-pub` pour régénérer le registre de plugins de release (flutter/flutter#169336).
+- Badge CI relié au dépôt réel `jkatems/nextflutter_final`.
+
+### Ajouté
+- Un fichier par écran, répertoire de widgets partagés sans dépendance au contrôleur, thème séparé et point de composition pour injecter les dépendances.
+- Tests des frontières d’état, de l’isolation du stockage, du chargement paresseux et de l’accessibilité sur six écrans en FR/EN et clair/sombre.
+- Exports de preuves : résultats Flutter JSON, JUnit, LCOV, couverture HTML, empreintes SHA-256 des sources.
+- Archive de remise complète avec sources, tests, documentation, workflows et manifeste vérifié, disponible également comme artefact CI.
+- Matrice des exigences et documentation d’accessibilité détaillée.
 
 ## [1.2.0] — 2026-09-28
 

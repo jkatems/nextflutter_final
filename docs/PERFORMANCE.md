@@ -12,7 +12,7 @@ Ces choix suivent les [bonnes pratiques Flutter](https://docs.flutter.dev/perf/b
 
 ## Mesure reproductible sur appareil physique
 
-Utiliser un appareil de test, avec une copie de ses données. Le scénario sauvegarde et restaure le snapshot existant dans un bloc `finally`, mais un arrêt forcé du processus peut empêcher cette restauration.
+Le scénario utilise une clé distincte `focusflow.performance-test.v1` ; les tâches de l’utilisateur ne sont ni lues ni remplacées. Le snapshot du namespace de benchmark est restauré dans un bloc `finally`.
 
 ```sh
 flutter devices
@@ -31,13 +31,13 @@ Le 28 septembre 2026, le benchmark a été exécuté avec succès sur Linux x64,
 
 | Mesure | Valeur |
 | --- | --- |
-| Frames collectées | 411 |
-| Construction moyenne / p99 / pire | 0,682 / 2,064 / 5,371 ms |
-| Rasterisation moyenne / p99 / pire | 0,865 / 2,474 / 11,175 ms |
+| Frames collectées | 476 |
+| Construction moyenne / p99 / pire | 1,204 / 5,844 / 7,592 ms |
+| Rasterisation moyenne / p99 / pire | 1,667 / 5,02 / 10,286 ms |
 | Dépassements du budget construction | 0 |
 | Dépassements du budget rasterisation | 0 |
 
-Les deux assertions p99 < 16,67 ms ont passé. [Résultat brut complet](benchmarks/linux-profile.json), avec les temps de chaque frame. Ces temps moteur ne mesurent pas la latence d’entrée complète ni la fréquence de présentation de l’écran. Ils ne certifient pas les performances des téléphones Android/iOS.
+Les deux assertions p99 < 16,67 ms ont passé. [Résultat brut complet](benchmarks/linux-profile.json), avec les temps de chaque frame, [métadonnées et empreinte des sources](benchmarks/linux-profile-metadata.json) et [log du pilote](quality/performance-linux.txt). Ces temps moteur ne mesurent pas la latence d’entrée complète ni la fréquence de présentation de l’écran. Ils ne certifient pas les performances des téléphones Android/iOS.
 
 Commande : `flutter drive --no-pub --profile -d linux --driver=test_driver/performance.dart --target=integration_test/performance_test.dart`.
 

@@ -2,11 +2,23 @@
 
 **Un peu de clarté, beaucoup de possibilités.** Une application Flutter de gestion de tâches personnelle, en français et en anglais, avec sauvegarde locale et interface adaptative.
 
-[![GitHub Actions configuré](docs/badges/ci.svg)](.github/workflows/ci.yml)
+[![Flutter CI](https://github.com/jkatems/nextflutter_final/actions/workflows/ci.yml/badge.svg)](https://github.com/jkatems/nextflutter_final/actions/workflows/ci.yml)
 ![Flutter 3.41.9](https://img.shields.io/badge/Flutter-3.41.9-02569B?logo=flutter)
-![Version 1.2.0](https://img.shields.io/badge/version-1.2.0-254D3F)
+![Version 1.3.0](https://img.shields.io/badge/version-1.3.0-254D3F)
 
-Le badge CI décrit la configuration, pas un résultat d’exécution distant. Après création du dépôt GitHub, remplacer son URL par `https://github.com/OWNER/REPOSITORY/actions/workflows/ci.yml/badge.svg` pour afficher l’état réel. Aucun dépôt distant n’était fourni.
+Le badge affiche l’état réel du workflow GitHub. Les résultats locaux détaillés sont fournis dans [docs/quality/SUMMARY.md](docs/quality/SUMMARY.md).
+
+## Livrable à remettre pour évaluation
+
+Consulter d’abord la [matrice des exigences et preuves](docs/REQUIREMENTS.md). Pour produire l’archive source complète :
+
+```sh
+./scripts/verify.sh
+# Puis intégration web et benchmark comme indiqué plus bas.
+python3 scripts/package_source.py
+```
+
+Le fichier **`dist/focusflow-source-1.3.0.zip`** inclut `lib/`, `test/`, `integration_test/`, les workflows, le CHANGELOG, les captures et les rapports. Son manifeste contient le SHA-256 de chaque fichier. Le script refuse une remise sans tests, sans rapports ou dont les sources ont changé depuis les tests. Une archive `build/web` sert à exécuter l’application ; les sources et tests Flutter sont dans l’archive source.
 
 ## Aperçu
 
@@ -54,16 +66,21 @@ Aucun compte, secret API ou backend n’est nécessaire. `pubspec.lock` est incl
 
 ```text
 lib/
-  domain/task.dart          Modèle immuable, validation, filtres, statistiques
-  data/app_repository.dart  Contrat injectable et stockage JSON versionné
-  state/app_controller.dart État, mutations, erreurs et préférences observables
-  ui/app.dart               Thèmes, navigation adaptative, racine de l’application
-  ui/screens.dart           Six écrans et formulaire partagé création/édition
-  ui/components.dart        Widgets réutilisables et formatage localisé
-  l10n/app_{fr,en}.arb       Sources de traduction Flutter gen-l10n
+  bootstrap.dart            Composition et injection des dépendances
+  domain/                   Task, AppSnapshot, contrat AppRepository
+  data/                     Adaptateur SharedPreferences, données d’exemple
+  state/app_controller.dart Commandes, état encapsulé, erreurs typées
+  ui/app.dart               Racine localisée de l’application
+  ui/app_shell.dart         Navigation adaptative et états globaux
+  ui/screens/               Un fichier par écran (six écrans)
+  ui/widgets/               Widgets partagés, données et callbacks uniquement
+  ui/theme/                 Thèmes clair/sombre
+  ui/navigation.dart        Ouverture des détails et du formulaire
+  ui/formatters.dart        Labels et dates localisés
+  l10n/app_{fr,en}.arb       Sources générées avec Flutter gen-l10n
 ```
 
-Les widgets appellent le contrôleur, qui valide puis écrit via le repository. Le nouvel état n’est publié qu’après réussite de la sauvegarde. Une écriture échouée conserve le dernier état validé ; une lecture invalide conserve les données et affiche un réessai. Les tests utilisent une horloge injectée et un repository mémoire ; l’intégration utilise le véritable adaptateur SharedPreferences.
+Les [frontières architecturales](docs/ARCHITECTURE.md) sont vérifiées en CI. Les widgets d’écran appellent le contrôleur, qui valide puis écrit via le repository. Le nouvel état n’est publié qu’après réussite de la sauvegarde. Une écriture échouée conserve le dernier état validé ; une lecture invalide conserve les données et affiche un réessai. Les tests utilisent une horloge injectée et un repository mémoire ; l’intégration utilise le véritable adaptateur SharedPreferences.
 
 `ChangeNotifier` suffit à cet état local, sans framework supplémentaire. Un `ValueNotifier` distinct limite les reconstructions de `MaterialApp` aux changements de langue/thème. Les constructeurs `const` et les listes `builder` limitent le travail du rendu.
 
@@ -77,8 +94,8 @@ python3 scripts/check_coverage.py
 ./scripts/verify.sh
 ```
 
-- **32 tests unitaires** : modèles, validation, filtres, statistiques, repository, corruption, erreurs et concurrence des sauvegardes.
-- **13 tests widgets** : navigation, formulaire, recherche, filtres, langue, thème, confirmation, erreurs, écran de 320 px et texte à 200 %, accessibilité.
+- **40 tests unitaires** : modèles, validation, filtres, statistiques, repository, corruption, erreurs et concurrence des sauvegardes.
+- **19 tests widgets** : navigation, formulaire, recherche, filtres, langue, thème, confirmation, erreurs, écran de 320 px et texte à 200 %, accessibilité.
 - **2 tests d’intégration** : création → validation → rechargement du stockage ; édition → langue/thème → redémarrage du contrôleur → suppression confirmée.
 - **1 scénario de performance** : 1 000 tâches en mode profile, avec export des temps de construction et de rasterisation.
 - Seuil CI : **90 % de couverture des lignes métier** (`domain`, `data`, `state`), sans gonfler le résultat avec les fichiers de traduction générés.
@@ -93,21 +110,21 @@ CHROMEDRIVER=/chemin/vers/chromedriver \
 ./scripts/test_web.sh
 ```
 
-Le script démarre et arrête ChromeDriver, exécute les deux parcours et régénère les captures. Utiliser un profil/appareil de test : la suite réinitialise uniquement la clé de données FocusFlow. Sur Android : `flutter test integration_test/app_test.dart -d DEVICE_ID` (sans l’option `SCREENSHOTS`).
+Le script démarre et arrête ChromeDriver, exécute les deux parcours et régénère les captures. Utiliser un profil/appareil de test : la suite utilise une clé de test séparée des données utilisateur. Sur Android : `flutter test integration_test/app_test.dart -d DEVICE_ID` (sans l’option `SCREENSHOTS`).
 
-Les preuves et limites de validation sont consignées dans [docs/VALIDATION.md](docs/VALIDATION.md).
+Les rapports [JSON/JUnit/LCOV et couverture HTML](docs/quality/SUMMARY.md) sont inclus. La couverture métier actuelle est de **98,8 %** (165/167 lignes), avec **100 % des lignes du contrôleur** couvertes. Les preuves et limites de validation sont consignées dans [docs/VALIDATION.md](docs/VALIDATION.md).
 
 ## Performance et accessibilité
 
 Photos **WebP 640 × 400**, embarquées et décodées à la demande avec `cacheWidth`, liste de tâches paresseuse et police locale. Voir les [sources des assets](docs/ASSETS.md).
 
-Les boutons natifs exposent leurs libellés ; les cases de validation, liens de tâche et indicateurs ont une sémantique explicite. Les tests vérifient les cibles tactiles Android et leurs libellés. Le texte à 200 % est testé sur les quatre destinations de navigation. Une recette TalkBack/VoiceOver sur appareil reste nécessaire.
+Les boutons natifs exposent leurs libellés ; les cases de validation, liens de tâche et indicateurs ont une sémantique explicite. Les tests vérifient les cibles tactiles Android/iOS, les libellés et le contraste sur les six écrans dans les quatre variantes FR/EN × clair/sombre. Voir [le détail de l’accessibilité](docs/ACCESSIBILITY.md). Le texte à 200 % est testé sur les quatre destinations de navigation. Une recette TalkBack/VoiceOver sur appareil reste nécessaire.
 
-Le benchmark Linux natif a mesuré **411 frames**, avec un p99 de **2,064 ms** en construction et **2,474 ms** en rasterisation, sans dépassement de budget sur ce passage. Le projet est optimisé pour viser 60 FPS, mais **60 FPS constants ne sont pas certifiés sans profilage physique**. Le [protocole et le benchmark](docs/PERFORMANCE.md) sont fournis, avec un budget p99 de 16,67 ms.
+Le benchmark Linux natif de cette version a mesuré **476 frames**, avec un p99 de **5,844 ms** en construction et **5,02 ms** en rasterisation. Le projet est optimisé pour viser 60 FPS, mais **60 FPS constants ne sont pas certifiés sans profilage physique**. Le [protocole et le benchmark](docs/PERFORMANCE.md) sont fournis, avec un budget p99 de 16,67 ms.
 
 ## CI/CD et livraison
 
-[Flutter CI](.github/workflows/ci.yml) exécute sur push/PR : formatage, analyse stricte, tests, couverture, intégration Chrome, puis produit l’archive web release et un bundle Android non signé. Aucun secret n’est requis pour ces contrôles.
+[Flutter CI](.github/workflows/ci.yml) exécute sur push/PR : formatage, analyse stricte, tests, couverture, intégration Chrome, puis produit l’archive web release, un bundle Android non signé et une archive source complète. Les rapports JSON, JUnit, LCOV et HTML sont publiés comme artefacts CI. Aucun secret n’est requis pour ces contrôles.
 
 [Deploy web to GitHub Pages](.github/workflows/deploy.yml) permet une publication manuelle, précédée des mêmes validations. Activer GitHub Pages avec la source GitHub Actions avant son premier lancement.
 
@@ -120,4 +137,4 @@ Consulter [la procédure de production](docs/PRODUCTION.md) pour la signature An
 
 ## Historique
 
-[CHANGELOG.md](CHANGELOG.md) documente les incréments **1.0.0**, **1.1.0** et **1.2.0** réalisés pour ce projet. Ils ne correspondent pas à des publications déjà effectuées sur les stores.
+[CHANGELOG.md](CHANGELOG.md) documente les incréments **1.0.0**, **1.1.0**, **1.2.0** et **1.3.0** réalisés pour ce projet. Ils ne correspondent pas à des publications déjà effectuées sur les stores.

@@ -9,7 +9,7 @@ python3 -m http.server 8080 --directory build/web
 
 Servir tout `build/web` en HTTPS. `--no-web-resources-cdn` embarque CanvasKit : aucune dépendance au CDN du moteur. La police et les photos sont locales. Les tâches fonctionnent sans réseau une fois l’application chargée ; la réouverture d’une page web hors ligne n’est pas garantie (pas de service worker applicatif). Les applications natives embarquent toutes les ressources.
 
-Pour GitHub Pages : pousser ce dossier dans un dépôt, activer **Settings → Pages → GitHub Actions**, puis lancer **Deploy web to GitHub Pages**. Le workflow relance analyse, tests, couverture et intégration avant publication. Il calcule le chemin de base pour le dépôt. Aucune publication distante n’a été effectuée pendant la préparation de ce livrable.
+Pour GitHub Pages : pousser ce dossier dans un dépôt, activer **Settings → Pages → GitHub Actions**, puis lancer **Deploy web to GitHub Pages**. Le workflow relance analyse, tests, couverture et intégration avant publication. Il calcule le chemin de base pour le dépôt. Les corrections locales ne sont pas publiées automatiquement ; consulter le badge et les runs du dépôt pour connaître l’état distant.
 
 Ne pas mettre en cache durablement `index.html`, `flutter_bootstrap.js` et `main.dart.js` sans invalidation à chaque version.
 

@@ -22,13 +22,24 @@ jobs:
       - run: flutter pub get --enforce-lockfile
       - run: flutter gen-l10n
       - run: dart format --output=none --set-exit-if-changed lib test integration_test test_driver
-      - run: flutter analyze --fatal-infos --no-pub
-      - run: flutter test --no-pub --coverage
+      - run: python3 scripts/check_architecture.py
+      - run: flutter analyze --fatal-infos --no-pub | tee docs/quality/analyze.txt
+      - run: flutter test --no-pub --coverage --reporter=json > docs/quality/tests.jsonl
       - run: python3 scripts/check_coverage.py
+      - run: python3 scripts/quality_report.py
+        if: success() || failure()
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: coverage
-          path: coverage/lcov.info
+          name: quality-evidence
+          path: |
+            docs/quality/analyze.txt
+            docs/quality/tests.jsonl
+            docs/quality/summary.json
+            docs/quality/SUMMARY.md
+            docs/quality/junit.xml
+            docs/quality/lcov.info
+            docs/quality/coverage.html
   integration:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -44,35 +55,18 @@ jobs:
           chrome-version: stable
           install-chromedriver: true
       - run: flutter pub get --enforce-lockfile
-      - name: Start ChromeDriver
-        env:
-          CHROMEDRIVER: ${{ steps.chrome.outputs.chromedriver-path }}
-        run: |
-          "$CHROMEDRIVER" --port=4444 > /tmp/chromedriver.log 2>&1 &
-          for i in $(seq 1 30); do
-            if curl -fsS http://localhost:4444/status; then exit 0; fi
-            sleep 1
-          done
-          cat /tmp/chromedriver.log
-          exit 1
       - name: Real browser integration tests
         env:
           CHROME_BINARY: ${{ steps.chrome.outputs.chrome-path }}
-        run: >-
-          flutter drive --no-pub
-          --driver=test_driver/integration_test.dart
-          --target=integration_test/app_test.dart
-          -d web-server --browser-name=chrome --headless
-          --chrome-binary="$CHROME_BINARY"
-          --browser-dimension=1440x1080
-          --dart-define=SCREENSHOTS=true
+          CHROMEDRIVER: ${{ steps.chrome.outputs.chromedriver-path }}
+        run: ./scripts/test_web.sh
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: integration-evidence
           path: |
             docs/screenshots/*.png
-            /tmp/chromedriver.log
+            docs/quality/integration-web.txt
   release-web:
     needs: [quality, integration]
     runs-on: ubuntu-latest
@@ -95,7 +89,7 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -105,8 +99,29 @@ jobs:
           cache: true
       - run: flutter pub get --enforce-lockfile
       - name: Compile unsigned release bundle
-        run: flutter build appbundle --release --no-pub
+        # Flutter 3.41.x must regenerate the release plugin registry (flutter/flutter#169336).
+        # --no-pub leaves integration_test registered although Gradle excludes it.
+        run: flutter build appbundle --release
       - uses: actions/upload-artifact@v4
         with:
           name: focusflow-android-unsigned
           path: build/app/outputs/bundle/release/*.aab
+  source-submission:
+    needs: [quality, integration]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: quality-evidence
+          path: docs/quality
+      - uses: actions/download-artifact@v4
+        with:
+          name: integration-evidence
+          path: docs
+      - run: python3 scripts/package_source.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: focusflow-complete-source
+          path: dist/focusflow-source-*.zip

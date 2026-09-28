@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:focus_flow/data/app_repository.dart';
+import 'package:focus_flow/domain/app_snapshot.dart';
 import 'package:focus_flow/domain/task.dart';
 import 'package:focus_flow/state/app_controller.dart';
 import '../helpers.dart';
@@ -85,7 +85,7 @@ void main() {
     r.failSave = true;
     expect(await c.toggle('a'), isFalse);
     expect(c.tasks.single.completed, isFalse);
-    expect(c.error, 'save');
+    expect(c.error, AppFailure.save);
     expect(c.busy, isFalse);
     r.failSave = false;
     expect(await c.toggle('a'), isTrue);
@@ -98,7 +98,7 @@ void main() {
         ..failLoad = true;
       final c = await testController(repository: r);
       addTearDown(c.dispose);
-      expect(c.error, 'load');
+      expect(c.error, AppFailure.load);
       expect(await add(c), isFalse);
       expect(r.saves, 0);
       r.failLoad = false;

@@ -437,7 +437,7 @@ abstract class AppLocalizations {
   /// No description provided for @version.
   ///
   /// In fr, this message translates to:
-  /// **'Version 1.2.0 · Fait pour avancer sereinement'**
+  /// **'Version 1.3.0 · Fait pour avancer sereinement'**
   String get version;
 
   /// No description provided for @settingsSubtitle.

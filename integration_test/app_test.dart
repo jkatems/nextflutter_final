@@ -2,19 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:focus_flow/data/app_repository.dart';
+import 'package:focus_flow/data/preferences_repository.dart';
 import 'package:focus_flow/state/app_controller.dart';
+import 'package:focus_flow/bootstrap.dart';
 import 'package:focus_flow/ui/app.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  const testStorageKey = 'focusflow.integration-test.v1';
   late SharedPreferences prefs;
   late AppController controller;
   Future<void> start(WidgetTester tester) async {
     prefs = await SharedPreferences.getInstance();
     // This suite runs in a disposable browser profile/device; only our app key is removed.
-    await prefs.remove(PreferencesRepository.storageKey);
-    controller = AppController(PreferencesRepository(prefs));
+    await prefs.remove(testStorageKey);
+    controller = createAppController(
+      repository: PreferencesRepository(
+        preferences: prefs,
+        key: testStorageKey,
+      ),
+    );
     await controller.initialize();
     await tester.pumpWidget(FocusFlowApp(controller: controller));
     await tester.pumpAndSettle();
@@ -68,7 +75,12 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
       controller.dispose();
       await prefs.reload();
-      controller = AppController(PreferencesRepository(prefs));
+      controller = createAppController(
+        repository: PreferencesRepository(
+          preferences: prefs,
+          key: testStorageKey,
+        ),
+      );
       await controller.initialize();
       await tester.pumpWidget(FocusFlowApp(controller: controller));
       await tester.pumpAndSettle();
@@ -104,7 +116,12 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
       controller.dispose();
       await prefs.reload();
-      controller = AppController(PreferencesRepository(prefs));
+      controller = createAppController(
+        repository: PreferencesRepository(
+          preferences: prefs,
+          key: testStorageKey,
+        ),
+      );
       await controller.initialize();
       await tester.pumpWidget(FocusFlowApp(controller: controller));
       await tester.pumpAndSettle();
@@ -119,7 +136,8 @@ void main() {
       await prefs.reload();
       expect(
         (await PreferencesRepository(
-          prefs,
+          preferences: prefs,
+          key: testStorageKey,
         ).load())!.tasks.any((t) => t.id == 'welcome-1'),
         isFalse,
       );

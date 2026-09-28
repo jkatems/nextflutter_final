@@ -1,0 +1,1877 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>FocusFlow — couverture réelle</title><style>body{font:16px system-ui;max-width:1100px;margin:40px auto;padding:0 20px;color:#17261e}pre{overflow:auto;background:#f5f5f5;padding:16px;line-height:1.6}.miss{background:#ffe1de;color:#701510}.hit{background:#e4f3e7;color:#173c24}summary{cursor:pointer;padding:12px}a{color:#254d3f}</style><h1>Couverture FocusFlow</h1><p>165/167 lignes métier (98.8 %). Généré à partir du fichier LCOV, hors traductions générées.</p><details><summary>lib/domain/app_snapshot.dart — 21/21 lignes</summary><pre><span class="">   1 import &#x27;dart:convert&#x27;;</span>
+<span class="">   2 import &#x27;task.dart&#x27;;</span>
+<span class="">   3 </span>
+<span class="">   4 class AppSnapshot {</span>
+<span class="hit">   5   AppSnapshot({</span>
+<span class="">   6     required List&lt;Task&gt; tasks,</span>
+<span class="">   7     this.language = &#x27;fr&#x27;,</span>
+<span class="">   8     this.dark = false,</span>
+<span class="hit">   9   }) : tasks = List.unmodifiable(tasks);</span>
+<span class="">  10   final List&lt;Task&gt; tasks;</span>
+<span class="">  11   final String language;</span>
+<span class="">  12   final bool dark;</span>
+<span class="hit">  13   AppSnapshot copyWith({List&lt;Task&gt;? tasks, String? language, bool? dark}) =&gt;</span>
+<span class="hit">  14       AppSnapshot(</span>
+<span class="hit">  15         tasks: tasks ?? this.tasks,</span>
+<span class="hit">  16         language: language ?? this.language,</span>
+<span class="hit">  17         dark: dark ?? this.dark,</span>
+<span class="">  18       );</span>
+<span class="hit">  19   String encode() =&gt; jsonEncode({</span>
+<span class="">  20     &#x27;schema&#x27;: 1,</span>
+<span class="hit">  21     &#x27;language&#x27;: language,</span>
+<span class="hit">  22     &#x27;dark&#x27;: dark,</span>
+<span class="hit">  23     &#x27;tasks&#x27;: tasks.map((t) =&gt; t.toJson()).toList(),</span>
+<span class="">  24   });</span>
+<span class="hit">  25   factory AppSnapshot.decode(String source) {</span>
+<span class="hit">  26     final json = jsonDecode(source) as Map&lt;String, dynamic&gt;;</span>
+<span class="hit">  27     if (json[&#x27;schema&#x27;] != 1 || ![&#x27;fr&#x27;, &#x27;en&#x27;].contains(json[&#x27;language&#x27;])) {</span>
+<span class="">  28       throw const FormatException(&#x27;Unsupported snapshot&#x27;);</span>
+<span class="">  29     }</span>
+<span class="hit">  30     final tasks = (json[&#x27;tasks&#x27;] as List)</span>
+<span class="hit">  31         .map((t) =&gt; Task.fromJson(t as Map&lt;String, dynamic&gt;))</span>
+<span class="hit">  32         .toList();</span>
+<span class="hit">  33     if (tasks.map((t) =&gt; t.id).toSet().length != tasks.length) {</span>
+<span class="">  34       throw const FormatException(&#x27;Duplicate task ID&#x27;);</span>
+<span class="">  35     }</span>
+<span class="hit">  36     return AppSnapshot(</span>
+<span class="">  37       tasks: tasks,</span>
+<span class="hit">  38       language: json[&#x27;language&#x27;] as String,</span>
+<span class="hit">  39       dark: json[&#x27;dark&#x27;] as bool,</span>
+<span class="">  40     );</span>
+<span class="">  41   }</span>
+<span class="">  42 }</span>
+</pre></details><details><summary>lib/domain/task.dart — 49/50 lignes</summary><pre><span class="">   1 enum TaskCategory { work, personal, wellbeing }</span>
+<span class="">   2 </span>
+<span class="">   3 enum TaskPriority { low, medium, high }</span>
+<span class="">   4 </span>
+<span class="">   5 enum TaskFilter { all, pending, completed }</span>
+<span class="">   6 </span>
+<span class="">   7 class Task {</span>
+<span class="hit">   8   const Task({</span>
+<span class="">   9     required this.id,</span>
+<span class="">  10     required this.title,</span>
+<span class="">  11     required this.category,</span>
+<span class="">  12     required this.priority,</span>
+<span class="">  13     required this.dueDate,</span>
+<span class="">  14     this.notes = &#x27;&#x27;,</span>
+<span class="">  15     this.completed = false,</span>
+<span class="">  16   });</span>
+<span class="">  17   final String id;</span>
+<span class="">  18   final String title;</span>
+<span class="">  19   final String notes;</span>
+<span class="">  20   final TaskCategory category;</span>
+<span class="">  21   final TaskPriority priority;</span>
+<span class="">  22   final DateTime dueDate;</span>
+<span class="">  23   final bool completed;</span>
+<span class="">  24 </span>
+<span class="hit">  25   Task copyWith({</span>
+<span class="">  26     String? title,</span>
+<span class="">  27     String? notes,</span>
+<span class="">  28     TaskCategory? category,</span>
+<span class="">  29     TaskPriority? priority,</span>
+<span class="">  30     DateTime? dueDate,</span>
+<span class="">  31     bool? completed,</span>
+<span class="hit">  32   }) =&gt; Task(</span>
+<span class="hit">  33     id: id,</span>
+<span class="hit">  34     title: title ?? this.title,</span>
+<span class="hit">  35     notes: notes ?? this.notes,</span>
+<span class="hit">  36     category: category ?? this.category,</span>
+<span class="hit">  37     priority: priority ?? this.priority,</span>
+<span class="hit">  38     dueDate: dueDate ?? this.dueDate,</span>
+<span class="miss">  39     completed: completed ?? this.completed,</span>
+<span class="">  40   );</span>
+<span class="">  41 </span>
+<span class="hit">  42   bool isOverdue(DateTime now) =&gt;</span>
+<span class="hit">  43       !completed &amp;&amp; dueDate.isBefore(DateTime(now.year, now.month, now.day));</span>
+<span class="">  44 </span>
+<span class="hit">  45   Map&lt;String, Object&gt; toJson() =&gt; {</span>
+<span class="hit">  46     &#x27;id&#x27;: id,</span>
+<span class="hit">  47     &#x27;title&#x27;: title,</span>
+<span class="hit">  48     &#x27;notes&#x27;: notes,</span>
+<span class="hit">  49     &#x27;category&#x27;: category.name,</span>
+<span class="hit">  50     &#x27;priority&#x27;: priority.name,</span>
+<span class="hit">  51     &#x27;dueDate&#x27;: dueDate.toIso8601String(),</span>
+<span class="hit">  52     &#x27;completed&#x27;: completed,</span>
+<span class="">  53   };</span>
+<span class="">  54 </span>
+<span class="hit">  55   factory Task.fromJson(Map&lt;String, dynamic&gt; json) {</span>
+<span class="hit">  56     final title = json[&#x27;title&#x27;] as String;</span>
+<span class="hit">  57     final id = json[&#x27;id&#x27;] as String;</span>
+<span class="hit">  58     if (title.trim().isEmpty || title.length &gt; 100 || id.isEmpty) {</span>
+<span class="">  59       throw const FormatException(&#x27;Invalid task&#x27;);</span>
+<span class="">  60     }</span>
+<span class="hit">  61     return Task(</span>
+<span class="">  62       id: id,</span>
+<span class="">  63       title: title,</span>
+<span class="hit">  64       notes: json[&#x27;notes&#x27;] as String,</span>
+<span class="hit">  65       category: TaskCategory.values.byName(json[&#x27;category&#x27;] as String),</span>
+<span class="hit">  66       priority: TaskPriority.values.byName(json[&#x27;priority&#x27;] as String),</span>
+<span class="hit">  67       dueDate: DateTime.parse(json[&#x27;dueDate&#x27;] as String),</span>
+<span class="hit">  68       completed: json[&#x27;completed&#x27;] as bool,</span>
+<span class="">  69     );</span>
+<span class="">  70   }</span>
+<span class="">  71 }</span>
+<span class="">  72 </span>
+<span class="hit">  73 String? validateTitle(String? value) {</span>
+<span class="hit">  74   if (value == null || value.trim().isEmpty) return &#x27;required&#x27;;</span>
+<span class="hit">  75   if (value.trim().length &gt; 100) return &#x27;tooLong&#x27;;</span>
+<span class="">  76   return null;</span>
+<span class="">  77 }</span>
+<span class="">  78 </span>
+<span class="hit">  79 List&lt;Task&gt; filterTasks(</span>
+<span class="">  80   List&lt;Task&gt; tasks, {</span>
+<span class="">  81   String query = &#x27;&#x27;,</span>
+<span class="">  82   TaskFilter filter = TaskFilter.all,</span>
+<span class="">  83   TaskCategory? category,</span>
+<span class="">  84 }) {</span>
+<span class="hit">  85   final needle = query.trim().toLowerCase();</span>
+<span class="">  86   return tasks</span>
+<span class="hit">  87       .where(</span>
+<span class="hit">  88         (t) =&gt;</span>
+<span class="hit">  89             (filter == TaskFilter.all ||</span>
+<span class="hit">  90                 t.completed == (filter == TaskFilter.completed)) &amp;&amp;</span>
+<span class="hit">  91             (category == null || t.category == category) &amp;&amp;</span>
+<span class="hit">  92             (&#x27;${t.title} ${t.notes}&#x27;.toLowerCase().contains(needle)),</span>
+<span class="">  93       )</span>
+<span class="hit">  94       .toList()</span>
+<span class="hit">  95     ..sort((a, b) {</span>
+<span class="hit">  96       final status = (a.completed ? 1 : 0).compareTo(b.completed ? 1 : 0);</span>
+<span class="hit">  97       return status != 0 ? status : a.dueDate.compareTo(b.dueDate);</span>
+<span class="">  98     });</span>
+<span class="">  99 }</span>
+<span class=""> 100 </span>
+<span class=""> 101 class TaskStats {</span>
+<span class="hit"> 102   TaskStats(List&lt;Task&gt; tasks)</span>
+<span class="hit"> 103     : total = tasks.length,</span>
+<span class="hit"> 104       completed = tasks.where((t) =&gt; t.completed).length;</span>
+<span class=""> 105   final int total;</span>
+<span class=""> 106   final int completed;</span>
+<span class="hit"> 107   int get pending =&gt; total - completed;</span>
+<span class="hit"> 108   double get progress =&gt; total == 0 ? 0 : completed / total;</span>
+<span class=""> 109 }</span>
+</pre></details><details><summary>lib/data/demo_snapshot.dart — 9/9 lignes</summary><pre><span class="">   1 import &#x27;../domain/app_snapshot.dart&#x27;;</span>
+<span class="">   2 import &#x27;../domain/task.dart&#x27;;</span>
+<span class="">   3 </span>
+<span class="hit">   4 AppSnapshot demoSnapshot(DateTime now) {</span>
+<span class="hit">   5   final today = DateTime(now.year, now.month, now.day);</span>
+<span class="hit">   6   return AppSnapshot(</span>
+<span class="hit">   7     tasks: [</span>
+<span class="hit">   8       Task(</span>
+<span class="">   9         id: &#x27;welcome-1&#x27;,</span>
+<span class="">  10         title: &#x27;Dessiner les premières idées&#x27;,</span>
+<span class="">  11         notes:</span>
+<span class="">  12             &#x27;Prendre une feuille, explorer trois pistes et garder celle qui vous inspire.&#x27;,</span>
+<span class="">  13         category: TaskCategory.work,</span>
+<span class="">  14         priority: TaskPriority.high,</span>
+<span class="">  15         dueDate: today,</span>
+<span class="">  16       ),</span>
+<span class="hit">  17       Task(</span>
+<span class="">  18         id: &#x27;welcome-2&#x27;,</span>
+<span class="">  19         title: &#x27;Une pause pour soi&#x27;,</span>
+<span class="">  20         notes: &#x27;Vingt minutes de marche, sans écran. Juste prendre l’air.&#x27;,</span>
+<span class="">  21         category: TaskCategory.wellbeing,</span>
+<span class="">  22         priority: TaskPriority.medium,</span>
+<span class="">  23         dueDate: today,</span>
+<span class="">  24       ),</span>
+<span class="hit">  25       Task(</span>
+<span class="">  26         id: &#x27;welcome-3&#x27;,</span>
+<span class="">  27         title: &#x27;Lire un nouveau chapitre&#x27;,</span>
+<span class="">  28         category: TaskCategory.personal,</span>
+<span class="">  29         priority: TaskPriority.low,</span>
+<span class="hit">  30         dueDate: today.add(const Duration(days: 1)),</span>
+<span class="">  31       ),</span>
+<span class="hit">  32       Task(</span>
+<span class="">  33         id: &#x27;welcome-4&#x27;,</span>
+<span class="">  34         title: &#x27;Préparer la semaine&#x27;,</span>
+<span class="">  35         category: TaskCategory.personal,</span>
+<span class="">  36         priority: TaskPriority.medium,</span>
+<span class="">  37         dueDate: today,</span>
+<span class="">  38         completed: true,</span>
+<span class="">  39       ),</span>
+<span class="">  40     ],</span>
+<span class="">  41   );</span>
+<span class="">  42 }</span>
+</pre></details><details><summary>lib/state/app_controller.dart — 78/78 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/foundation.dart&#x27;;</span>
+<span class="">   2 import &#x27;../domain/app_repository.dart&#x27;;</span>
+<span class="">   3 import &#x27;../domain/app_snapshot.dart&#x27;;</span>
+<span class="">   4 import &#x27;../domain/task.dart&#x27;;</span>
+<span class="">   5 </span>
+<span class="">   6 enum AppFailure { load, save }</span>
+<span class="">   7 </span>
+<span class="">   8 /// Application state. Widgets observe it and issue commands, never mutate it.</span>
+<span class="">   9 /// Persistence and the initial data factory are injected at the composition root.</span>
+<span class="">  10 class AppController extends ChangeNotifier {</span>
+<span class="hit">  11   AppController(</span>
+<span class="">  12     this.repository, {</span>
+<span class="">  13     DateTime Function()? clock,</span>
+<span class="">  14     AppSnapshot Function(DateTime)? initialSnapshot,</span>
+<span class="">  15   }) : clock = clock ?? DateTime.now,</span>
+<span class="">  16        _initialSnapshot = initialSnapshot ?? _emptySnapshot;</span>
+<span class="hit">  17   static AppSnapshot _emptySnapshot(DateTime _) =&gt; AppSnapshot(tasks: []);</span>
+<span class="">  18   final AppSnapshot Function(DateTime) _initialSnapshot;</span>
+<span class="">  19   final AppRepository repository;</span>
+<span class="">  20   final DateTime Function() clock;</span>
+<span class="">  21   AppSnapshot _snapshot = AppSnapshot(tasks: []);</span>
+<span class="hit">  22   AppSnapshot get snapshot =&gt; _snapshot;</span>
+<span class="hit">  23   List&lt;Task&gt; get tasks =&gt; _snapshot.tasks;</span>
+<span class="">  24   bool _loading = true;</span>
+<span class="">  25   bool _busy = false;</span>
+<span class="">  26   AppFailure? _error;</span>
+<span class="">  27   bool _disposed = false;</span>
+<span class="">  28   bool _initializing = false;</span>
+<span class="hit">  29   bool get loading =&gt; _loading;</span>
+<span class="hit">  30   bool get busy =&gt; _busy;</span>
+<span class="hit">  31   AppFailure? get error =&gt; _error;</span>
+<span class="">  32 </span>
+<span class="">  33   /// A read failure remains blocking until initialize succeeds.</span>
+<span class="hit">  34   void dismissError() {</span>
+<span class="hit">  35     if (_error != AppFailure.save || _disposed) return;</span>
+<span class="hit">  36     _error = null;</span>
+<span class="hit">  37     _notify();</span>
+<span class="">  38   }</span>
+<span class="">  39 </span>
+<span class="hit">  40   void _notify() {</span>
+<span class="hit">  41     if (!_disposed) notifyListeners();</span>
+<span class="">  42   }</span>
+<span class="">  43 </span>
+<span class="">  44   int _sequence = 0;</span>
+<span class="">  45   final _preferences = ValueNotifier&lt;(String, bool)&gt;((&#x27;fr&#x27;, false));</span>
+<span class="hit">  46   ValueListenable&lt;(String, bool)&gt; get preferences =&gt; _preferences;</span>
+<span class="hit">  47   void _syncPreferences() {</span>
+<span class="hit">  48     if (!_disposed) _preferences.value = (snapshot.language, snapshot.dark);</span>
+<span class="">  49   }</span>
+<span class="">  50 </span>
+<span class="hit">  51   @override</span>
+<span class="">  52   void dispose() {</span>
+<span class="hit">  53     _disposed = true;</span>
+<span class="hit">  54     _preferences.dispose();</span>
+<span class="hit">  55     super.dispose();</span>
+<span class="">  56   }</span>
+<span class="">  57 </span>
+<span class="hit">  58   Future&lt;void&gt; initialize() async {</span>
+<span class="hit">  59     if (_disposed || _initializing || busy) return;</span>
+<span class="hit">  60     _initializing = true;</span>
+<span class="hit">  61     _loading = true;</span>
+<span class="hit">  62     _error = null;</span>
+<span class="hit">  63     _notify();</span>
+<span class="">  64     try {</span>
+<span class="hit">  65       final saved = await repository.load();</span>
+<span class="">  66       if (saved == null) {</span>
+<span class="hit">  67         final initial = _initialSnapshot(clock());</span>
+<span class="hit">  68         await repository.save(initial);</span>
+<span class="hit">  69         _snapshot = initial;</span>
+<span class="">  70       } else {</span>
+<span class="hit">  71         _snapshot = saved;</span>
+<span class="">  72       }</span>
+<span class="">  73     } catch (_) {</span>
+<span class="hit">  74       _error = AppFailure.load;</span>
+<span class="">  75     }</span>
+<span class="hit">  76     _syncPreferences();</span>
+<span class="hit">  77     _initializing = false;</span>
+<span class="hit">  78     _loading = false;</span>
+<span class="hit">  79     _notify();</span>
+<span class="">  80   }</span>
+<span class="">  81 </span>
+<span class="hit">  82   Future&lt;bool&gt; _commit(AppSnapshot next) async {</span>
+<span class="hit">  83     if (_disposed || busy || loading || _error == AppFailure.load) return false;</span>
+<span class="hit">  84     _busy = true;</span>
+<span class="hit">  85     _error = null;</span>
+<span class="hit">  86     _notify();</span>
+<span class="">  87     try {</span>
+<span class="hit">  88       await repository.save(next);</span>
+<span class="hit">  89       _snapshot = next;</span>
+<span class="hit">  90       _syncPreferences();</span>
+<span class="">  91       return true;</span>
+<span class="">  92     } catch (_) {</span>
+<span class="hit">  93       _error = AppFailure.save;</span>
+<span class="">  94       return false;</span>
+<span class="">  95     } finally {</span>
+<span class="hit">  96       _busy = false;</span>
+<span class="hit">  97       _notify();</span>
+<span class="">  98     }</span>
+<span class="">  99   }</span>
+<span class=""> 100 </span>
+<span class="hit"> 101   Future&lt;bool&gt; saveTask({</span>
+<span class=""> 102     String? id,</span>
+<span class=""> 103     required String title,</span>
+<span class=""> 104     required String notes,</span>
+<span class=""> 105     required TaskCategory category,</span>
+<span class=""> 106     required TaskPriority priority,</span>
+<span class=""> 107     required DateTime dueDate,</span>
+<span class=""> 108   }) async {</span>
+<span class="hit"> 109     if (validateTitle(title) != null || notes.length &gt; 2000) return false;</span>
+<span class="hit"> 110     final index = tasks.indexWhere((t) =&gt; t.id == id);</span>
+<span class="hit"> 111     if (id != null &amp;&amp; index &lt; 0) return false;</span>
+<span class="hit"> 112     final task = Task(</span>
+<span class="hit"> 113       id: id ?? &#x27;${clock().microsecondsSinceEpoch}-${_sequence++}&#x27;,</span>
+<span class="hit"> 114       title: title.trim(),</span>
+<span class="hit"> 115       notes: notes.trim(),</span>
+<span class=""> 116       category: category,</span>
+<span class=""> 117       priority: priority,</span>
+<span class="hit"> 118       dueDate: DateTime(dueDate.year, dueDate.month, dueDate.day),</span>
+<span class="hit"> 119       completed: index &gt;= 0 ? tasks[index].completed : false,</span>
+<span class=""> 120     );</span>
+<span class="hit"> 121     final next = [...tasks];</span>
+<span class="hit"> 122     if (index &gt;= 0) {</span>
+<span class="hit"> 123       next[index] = task;</span>
+<span class=""> 124     } else {</span>
+<span class="hit"> 125       next.add(task);</span>
+<span class=""> 126     }</span>
+<span class="hit"> 127     return _commit(_snapshot.copyWith(tasks: next));</span>
+<span class=""> 128   }</span>
+<span class=""> 129 </span>
+<span class="hit"> 130   Future&lt;bool&gt; toggle(String id) async {</span>
+<span class="hit"> 131     if (!tasks.any((t) =&gt; t.id == id)) return false;</span>
+<span class="hit"> 132     return _commit(</span>
+<span class="hit"> 133       _snapshot.copyWith(</span>
+<span class="hit"> 134         tasks: tasks</span>
+<span class="hit"> 135             .map((t) =&gt; t.id == id ? t.copyWith(completed: !t.completed) : t)</span>
+<span class="hit"> 136             .toList(),</span>
+<span class=""> 137       ),</span>
+<span class=""> 138     );</span>
+<span class=""> 139   }</span>
+<span class=""> 140 </span>
+<span class="hit"> 141   Future&lt;bool&gt; delete(String id) async {</span>
+<span class="hit"> 142     if (!tasks.any((t) =&gt; t.id == id)) return false;</span>
+<span class="hit"> 143     return _commit(</span>
+<span class="hit"> 144       _snapshot.copyWith(tasks: tasks.where((t) =&gt; t.id != id).toList()),</span>
+<span class=""> 145     );</span>
+<span class=""> 146   }</span>
+<span class=""> 147 </span>
+<span class="hit"> 148   Future&lt;bool&gt; setLanguage(String language) async {</span>
+<span class="hit"> 149     if (![&#x27;fr&#x27;, &#x27;en&#x27;].contains(language)) return false;</span>
+<span class="hit"> 150     if (language == snapshot.language) return true;</span>
+<span class="hit"> 151     return _commit(_snapshot.copyWith(language: language));</span>
+<span class=""> 152   }</span>
+<span class=""> 153 </span>
+<span class="hit"> 154   Future&lt;bool&gt; setDark(bool dark) =&gt; _commit(_snapshot.copyWith(dark: dark));</span>
+<span class=""> 155 }</span>
+</pre></details><details><summary>lib/data/preferences_repository.dart — 8/9 lignes</summary><pre><span class="">   1 import &#x27;package:shared_preferences/shared_preferences.dart&#x27;;</span>
+<span class="">   2 import &#x27;../domain/app_repository.dart&#x27;;</span>
+<span class="">   3 import &#x27;../domain/app_snapshot.dart&#x27;;</span>
+<span class="">   4 </span>
+<span class="">   5 /// SharedPreferences adapter; accepts a separate key for isolated test runs.</span>
+<span class="">   6 class PreferencesRepository implements AppRepository {</span>
+<span class="hit">   7   PreferencesRepository({this.preferences, this.key = storageKey});</span>
+<span class="">   8   static const storageKey = &#x27;focusflow.snapshot.v1&#x27;;</span>
+<span class="">   9   final SharedPreferences? preferences;</span>
+<span class="">  10   final String key;</span>
+<span class="hit">  11   @override</span>
+<span class="">  12   Future&lt;AppSnapshot?&gt; load() async {</span>
+<span class="hit">  13     final prefs = preferences ?? await SharedPreferences.getInstance();</span>
+<span class="hit">  14     final raw = prefs.getString(key);</span>
+<span class="hit">  15     return raw == null ? null : AppSnapshot.decode(raw);</span>
+<span class="">  16   }</span>
+<span class="">  17 </span>
+<span class="hit">  18   @override</span>
+<span class="">  19   Future&lt;void&gt; save(AppSnapshot snapshot) async {</span>
+<span class="hit">  20     final prefs = preferences ?? await SharedPreferences.getInstance();</span>
+<span class="hit">  21     if (!await prefs.setString(key, snapshot.encode())) {</span>
+<span class="miss">  22       throw StateError(&#x27;Storage unavailable&#x27;);</span>
+<span class="">  23     }</span>
+<span class="">  24   }</span>
+<span class="">  25 }</span>
+</pre></details><details><summary>lib/ui/app.dart — 10/10 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;app_shell.dart&#x27;;</span>
+<span class="">   5 import &#x27;theme/app_theme.dart&#x27;;</span>
+<span class="">   6 </span>
+<span class="">   7 class FocusFlowApp extends StatelessWidget {</span>
+<span class="hit">   8   const FocusFlowApp({super.key, required this.controller});</span>
+<span class="">   9   final AppController controller;</span>
+<span class="hit">  10   @override</span>
+<span class="hit">  11   Widget build(BuildContext context) =&gt; ValueListenableBuilder(</span>
+<span class="hit">  12     valueListenable: controller.preferences,</span>
+<span class="hit">  13     child: AppShell(controller: controller),</span>
+<span class="hit">  14     builder: (context, preferences, child) =&gt; MaterialApp(</span>
+<span class="">  15       title: &#x27;FocusFlow&#x27;,</span>
+<span class="">  16       debugShowCheckedModeBanner: false,</span>
+<span class="hit">  17       locale: Locale(controller.snapshot.language),</span>
+<span class="">  18       localizationsDelegates: AppLocalizations.localizationsDelegates,</span>
+<span class="">  19       supportedLocales: AppLocalizations.supportedLocales,</span>
+<span class="hit">  20       theme: appTheme(Brightness.light),</span>
+<span class="hit">  21       darkTheme: appTheme(Brightness.dark),</span>
+<span class="hit">  22       themeMode: controller.snapshot.dark ? ThemeMode.dark : ThemeMode.light,</span>
+<span class="">  23       home: child,</span>
+<span class="">  24     ),</span>
+<span class="">  25   );</span>
+<span class="">  26 }</span>
+</pre></details><details><summary>lib/ui/app_shell.dart — 89/89 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;navigation.dart&#x27;;</span>
+<span class="">   5 import &#x27;widgets/brand.dart&#x27;;</span>
+<span class="">   6 import &#x27;screens/home_screen.dart&#x27;;</span>
+<span class="">   7 import &#x27;screens/tasks_screen.dart&#x27;;</span>
+<span class="">   8 import &#x27;screens/stats_screen.dart&#x27;;</span>
+<span class="">   9 import &#x27;screens/settings_screen.dart&#x27;;</span>
+<span class="">  10 </span>
+<span class="">  11 class AppShell extends StatefulWidget {</span>
+<span class="hit">  12   const AppShell({super.key, required this.controller});</span>
+<span class="">  13   final AppController controller;</span>
+<span class="hit">  14   @override</span>
+<span class="hit">  15   State&lt;AppShell&gt; createState() =&gt; _AppShellState();</span>
+<span class="">  16 }</span>
+<span class="">  17 </span>
+<span class="">  18 class _AppShellState extends State&lt;AppShell&gt; {</span>
+<span class="">  19   int index = 0;</span>
+<span class="hit">  20   @override</span>
+<span class="">  21   Widget build(BuildContext context) {</span>
+<span class="hit">  22     final l = AppLocalizations.of(context);</span>
+<span class="hit">  23     final labels = [l.home, l.tasks, l.stats, l.settings];</span>
+<span class="">  24     const icons = [</span>
+<span class="">  25       Icons.grid_view_rounded,</span>
+<span class="">  26       Icons.check_circle_outline_rounded,</span>
+<span class="">  27       Icons.bar_chart_rounded,</span>
+<span class="">  28       Icons.tune_rounded,</span>
+<span class="">  29     ];</span>
+<span class="hit">  30     return ListenableBuilder(</span>
+<span class="hit">  31       listenable: widget.controller,</span>
+<span class="hit">  32       builder: (context, _) {</span>
+<span class="hit">  33         final c = widget.controller;</span>
+<span class="hit">  34         final wide = MediaQuery.sizeOf(context).width &gt;= 900;</span>
+<span class="hit">  35         final pages = [</span>
+<span class="hit">  36           HomeScreen(controller: c, onTasks: () =&gt; setState(() =&gt; index = 1)),</span>
+<span class="hit">  37           TasksScreen(controller: c),</span>
+<span class="hit">  38           StatsScreen(controller: c),</span>
+<span class="hit">  39           SettingsScreen(controller: c),</span>
+<span class="">  40         ];</span>
+<span class="hit">  41         return Scaffold(</span>
+<span class="">  42           appBar: wide</span>
+<span class="">  43               ? null</span>
+<span class="hit">  44               : AppBar(</span>
+<span class="">  45                   title: const Brand(),</span>
+<span class="hit">  46                   actions: [</span>
+<span class="hit">  47                     if (index &lt; 2)</span>
+<span class="hit">  48                       IconButton(</span>
+<span class="">  49                         key: const Key(&#x27;addTask&#x27;),</span>
+<span class="hit">  50                         tooltip: l.newTask,</span>
+<span class="hit">  51                         onPressed: c.loading || c.error == AppFailure.load</span>
+<span class="">  52                             ? null</span>
+<span class="hit">  53                             : () =&gt; openEditor(context, c),</span>
+<span class="">  54                         icon: const Icon(Icons.add_rounded),</span>
+<span class="">  55                       ),</span>
+<span class="hit">  56                     const SizedBox(width: 8),</span>
+<span class="">  57                   ],</span>
+<span class="">  58                 ),</span>
+<span class="">  59           bottomNavigationBar: wide</span>
+<span class="">  60               ? null</span>
+<span class="hit">  61               : NavigationBar(</span>
+<span class="hit">  62                   selectedIndex: index,</span>
+<span class="hit">  63                   onDestinationSelected: (value) =&gt;</span>
+<span class="hit">  64                       setState(() =&gt; index = value),</span>
+<span class="hit">  65                   destinations: List.generate(</span>
+<span class="">  66                     4,</span>
+<span class="hit">  67                     (i) =&gt; NavigationDestination(</span>
+<span class="hit">  68                       key: Key(&#x27;nav$i&#x27;),</span>
+<span class="hit">  69                       icon: Icon(icons[i]),</span>
+<span class="hit">  70                       label: labels[i],</span>
+<span class="">  71                     ),</span>
+<span class="">  72                   ),</span>
+<span class="">  73                 ),</span>
+<span class="hit">  74           body: SafeArea(</span>
+<span class="hit">  75             child: Row(</span>
+<span class="hit">  76               children: [</span>
+<span class="">  77                 if (wide)</span>
+<span class="hit">  78                   Container(</span>
+<span class="">  79                     width: 240,</span>
+<span class="hit">  80                     decoration: BoxDecoration(</span>
+<span class="hit">  81                       color: Theme.of(context).colorScheme.surface,</span>
+<span class="hit">  82                       border: Border(</span>
+<span class="hit">  83                         right: BorderSide(</span>
+<span class="hit">  84                           color: Theme.of(context).dividerColor,</span>
+<span class="">  85                         ),</span>
+<span class="">  86                       ),</span>
+<span class="">  87                     ),</span>
+<span class="hit">  88                     child: Padding(</span>
+<span class="">  89                       padding: const EdgeInsets.all(24),</span>
+<span class="hit">  90                       child: Column(</span>
+<span class="">  91                         crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  92                         children: [</span>
+<span class="">  93                           const SizedBox(height: 16),</span>
+<span class="">  94                           const Brand(),</span>
+<span class="">  95                           const SizedBox(height: 52),</span>
+<span class="hit">  96                           for (var i = 0; i &lt; 4; i++)</span>
+<span class="hit">  97                             Padding(</span>
+<span class="">  98                               padding: const EdgeInsets.only(bottom: 8),</span>
+<span class="hit">  99                               child: ListTile(</span>
+<span class="hit"> 100                                 key: Key(&#x27;nav$i&#x27;),</span>
+<span class="hit"> 101                                 selected: index == i,</span>
+<span class="hit"> 102                                 selectedTileColor: Theme.of(</span>
+<span class=""> 103                                   context,</span>
+<span class="hit"> 104                                 ).colorScheme.primaryContainer,</span>
+<span class="hit"> 105                                 shape: RoundedRectangleBorder(</span>
+<span class="hit"> 106                                   borderRadius: BorderRadius.circular(12),</span>
+<span class=""> 107                                 ),</span>
+<span class="hit"> 108                                 leading: Icon(icons[i], size: 21),</span>
+<span class="hit"> 109                                 title: Text(</span>
+<span class="hit"> 110                                   labels[i],</span>
+<span class=""> 111                                   style: const TextStyle(</span>
+<span class=""> 112                                     fontSize: 13,</span>
+<span class=""> 113                                     fontWeight: FontWeight.w600,</span>
+<span class=""> 114                                   ),</span>
+<span class=""> 115                                 ),</span>
+<span class="hit"> 116                                 onTap: () =&gt; setState(() =&gt; index = i),</span>
+<span class=""> 117                               ),</span>
+<span class=""> 118                             ),</span>
+<span class="hit"> 119                           const Spacer(),</span>
+<span class="hit"> 120                           const Icon(Icons.spa_outlined, size: 30),</span>
+<span class="hit"> 121                           const SizedBox(height: 12),</span>
+<span class="hit"> 122                           Text(</span>
+<span class="hit"> 123                             l.offline,</span>
+<span class="hit"> 124                             style: Theme.of(context).textTheme.bodySmall,</span>
+<span class=""> 125                           ),</span>
+<span class="hit"> 126                           const SizedBox(height: 12),</span>
+<span class=""> 127                         ],</span>
+<span class=""> 128                       ),</span>
+<span class=""> 129                     ),</span>
+<span class=""> 130                   ),</span>
+<span class="hit"> 131                 Expanded(</span>
+<span class="hit"> 132                   child: c.loading</span>
+<span class=""> 133                       ? const Center(child: CircularProgressIndicator())</span>
+<span class="hit"> 134                       : c.error == AppFailure.load</span>
+<span class="hit"> 135                       ? Center(</span>
+<span class="hit"> 136                           child: Padding(</span>
+<span class=""> 137                             padding: const EdgeInsets.all(32),</span>
+<span class="hit"> 138                             child: Column(</span>
+<span class=""> 139                               mainAxisSize: MainAxisSize.min,</span>
+<span class="hit"> 140                               children: [</span>
+<span class=""> 141                                 const Icon(Icons.cloud_off_rounded, size: 48),</span>
+<span class=""> 142                                 const SizedBox(height: 16),</span>
+<span class="hit"> 143                                 Text(l.loadError),</span>
+<span class=""> 144                                 const SizedBox(height: 16),</span>
+<span class="hit"> 145                                 FilledButton(</span>
+<span class="hit"> 146                                   onPressed: c.initialize,</span>
+<span class="hit"> 147                                   child: Text(l.retry),</span>
+<span class=""> 148                                 ),</span>
+<span class=""> 149                               ],</span>
+<span class=""> 150                             ),</span>
+<span class=""> 151                           ),</span>
+<span class=""> 152                         )</span>
+<span class="hit"> 153                       : Column(</span>
+<span class="hit"> 154                           children: [</span>
+<span class="hit"> 155                             if (c.error == AppFailure.save)</span>
+<span class="hit"> 156                               MaterialBanner(</span>
+<span class="hit"> 157                                 content: Semantics(</span>
+<span class=""> 158                                   liveRegion: true,</span>
+<span class="hit"> 159                                   child: Text(l.saveError),</span>
+<span class=""> 160                                 ),</span>
+<span class="hit"> 161                                 actions: [</span>
+<span class="hit"> 162                                   IconButton(</span>
+<span class=""> 163                                     key: const Key(&#x27;dismissError&#x27;),</span>
+<span class="hit"> 164                                     onPressed: c.dismissError,</span>
+<span class="hit"> 165                                     tooltip: MaterialLocalizations.of(</span>
+<span class=""> 166                                       context,</span>
+<span class="hit"> 167                                     ).closeButtonTooltip,</span>
+<span class=""> 168                                     icon: const Icon(Icons.close),</span>
+<span class=""> 169                                   ),</span>
+<span class=""> 170                                 ],</span>
+<span class=""> 171                               ),</span>
+<span class="hit"> 172                             Expanded(child: pages[index]),</span>
+<span class=""> 173                           ],</span>
+<span class=""> 174                         ),</span>
+<span class=""> 175                 ),</span>
+<span class=""> 176               ],</span>
+<span class=""> 177             ),</span>
+<span class=""> 178           ),</span>
+<span class=""> 179         );</span>
+<span class=""> 180       },</span>
+<span class=""> 181     );</span>
+<span class=""> 182   }</span>
+<span class=""> 183 }</span>
+</pre></details><details><summary>lib/ui/theme/app_theme.dart — 23/23 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 </span>
+<span class="">   3 const forest = Color(0xFF254D3F);</span>
+<span class="">   4 const paper = Color(0xFFF6F7F2);</span>
+<span class="">   5 </span>
+<span class="hit">   6 ThemeData appTheme(Brightness brightness) {</span>
+<span class="hit">   7   final dark = brightness == Brightness.dark;</span>
+<span class="hit">   8   final scheme = ColorScheme.fromSeed(</span>
+<span class="">   9     seedColor: forest,</span>
+<span class="">  10     brightness: brightness,</span>
+<span class="">  11     primary: dark ? const Color(0xFFAFD3B8) : forest,</span>
+<span class="">  12     surface: dark ? const Color(0xFF19241F) : Colors.white,</span>
+<span class="">  13   );</span>
+<span class="hit">  14   return ThemeData(</span>
+<span class="">  15     useMaterial3: true,</span>
+<span class="">  16     fontFamily: &#x27;AdwaitaSans&#x27;,</span>
+<span class="">  17     colorScheme: scheme,</span>
+<span class="">  18     scaffoldBackgroundColor: dark ? const Color(0xFF101A15) : paper,</span>
+<span class="hit">  19     appBarTheme: AppBarTheme(</span>
+<span class="">  20       backgroundColor: dark ? const Color(0xFF101A15) : paper,</span>
+<span class="">  21       scrolledUnderElevation: 0,</span>
+<span class="">  22     ),</span>
+<span class="">  23     textTheme: const TextTheme(</span>
+<span class="">  24       headlineLarge: TextStyle(</span>
+<span class="">  25         fontSize: 36,</span>
+<span class="">  26         height: 1.16,</span>
+<span class="">  27         fontWeight: FontWeight.w700,</span>
+<span class="">  28         letterSpacing: -1.2,</span>
+<span class="">  29       ),</span>
+<span class="">  30       headlineMedium: TextStyle(</span>
+<span class="">  31         fontSize: 28,</span>
+<span class="">  32         fontWeight: FontWeight.w700,</span>
+<span class="">  33         letterSpacing: -.8,</span>
+<span class="">  34       ),</span>
+<span class="">  35       titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),</span>
+<span class="">  36       bodyLarge: TextStyle(fontSize: 16, height: 1.5),</span>
+<span class="">  37       bodyMedium: TextStyle(fontSize: 14, height: 1.5),</span>
+<span class="">  38     ),</span>
+<span class="hit">  39     inputDecorationTheme: InputDecorationTheme(</span>
+<span class="">  40       filled: true,</span>
+<span class="hit">  41       fillColor: scheme.surface,</span>
+<span class="hit">  42       border: OutlineInputBorder(</span>
+<span class="hit">  43         borderRadius: BorderRadius.circular(14),</span>
+<span class="hit">  44         borderSide: BorderSide(color: scheme.outlineVariant),</span>
+<span class="">  45       ),</span>
+<span class="hit">  46       enabledBorder: OutlineInputBorder(</span>
+<span class="hit">  47         borderRadius: BorderRadius.circular(14),</span>
+<span class="hit">  48         borderSide: BorderSide(color: scheme.outlineVariant),</span>
+<span class="">  49       ),</span>
+<span class="">  50     ),</span>
+<span class="hit">  51     filledButtonTheme: FilledButtonThemeData(</span>
+<span class="hit">  52       style: FilledButton.styleFrom(</span>
+<span class="">  53         minimumSize: const Size(48, 50),</span>
+<span class="">  54         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),</span>
+<span class="hit">  55         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),</span>
+<span class="">  56       ),</span>
+<span class="">  57     ),</span>
+<span class="hit">  58     cardTheme: CardThemeData(</span>
+<span class="">  59       elevation: 0,</span>
+<span class="hit">  60       color: scheme.surface,</span>
+<span class="">  61       margin: EdgeInsets.zero,</span>
+<span class="hit">  62       shape: RoundedRectangleBorder(</span>
+<span class="hit">  63         borderRadius: BorderRadius.circular(20),</span>
+<span class="hit">  64         side: BorderSide(color: scheme.outlineVariant.withValues(alpha: .5)),</span>
+<span class="">  65       ),</span>
+<span class="">  66     ),</span>
+<span class="hit">  67     dividerTheme: DividerThemeData(</span>
+<span class="hit">  68       color: scheme.outlineVariant.withValues(alpha: .6),</span>
+<span class="">  69     ),</span>
+<span class="">  70   );</span>
+<span class="">  71 }</span>
+</pre></details><details><summary>lib/ui/navigation.dart — 8/8 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../domain/task.dart&#x27;;</span>
+<span class="">   3 import &#x27;../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;screens/task_editor_screen.dart&#x27;;</span>
+<span class="">   5 import &#x27;screens/task_detail_screen.dart&#x27;;</span>
+<span class="">   6 </span>
+<span class="hit">   7 Future&lt;void&gt; openEditor(</span>
+<span class="">   8   BuildContext context,</span>
+<span class="">   9   AppController controller, {</span>
+<span class="">  10   Task? task,</span>
+<span class="hit">  11 }) =&gt; Navigator.of(context).push(</span>
+<span class="hit">  12   MaterialPageRoute&lt;void&gt;(</span>
+<span class="hit">  13     builder: (_) =&gt; TaskEditorScreen(controller: controller, task: task),</span>
+<span class="">  14   ),</span>
+<span class="">  15 );</span>
+<span class="">  16 </span>
+<span class="hit">  17 Future&lt;void&gt; openTask(</span>
+<span class="">  18   BuildContext context,</span>
+<span class="">  19   AppController controller,</span>
+<span class="">  20   String id,</span>
+<span class="hit">  21 ) =&gt; Navigator.of(context).push(</span>
+<span class="hit">  22   MaterialPageRoute&lt;void&gt;(</span>
+<span class="hit">  23     builder: (_) =&gt; TaskDetailScreen(controller: controller, id: id),</span>
+<span class="">  24   ),</span>
+<span class="">  25 );</span>
+</pre></details><details><summary>lib/ui/widgets/brand.dart — 10/10 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 </span>
+<span class="">   3 class Brand extends StatelessWidget {</span>
+<span class="hit">   4   const Brand({super.key});</span>
+<span class="hit">   5   @override</span>
+<span class="hit">   6   Widget build(BuildContext context) =&gt; Row(</span>
+<span class="">   7     mainAxisSize: MainAxisSize.min,</span>
+<span class="hit">   8     children: [</span>
+<span class="hit">   9       Container(</span>
+<span class="">  10         width: 34,</span>
+<span class="">  11         height: 34,</span>
+<span class="hit">  12         decoration: BoxDecoration(</span>
+<span class="hit">  13           color: Theme.of(context).colorScheme.primary,</span>
+<span class="hit">  14           borderRadius: BorderRadius.circular(10),</span>
+<span class="">  15         ),</span>
+<span class="hit">  16         child: Icon(</span>
+<span class="">  17           Icons.spa_rounded,</span>
+<span class="hit">  18           color: Theme.of(context).colorScheme.onPrimary,</span>
+<span class="">  19           size: 21,</span>
+<span class="">  20         ),</span>
+<span class="">  21       ),</span>
+<span class="">  22       const SizedBox(width: 10),</span>
+<span class="">  23       const Flexible(</span>
+<span class="">  24         child: Text(</span>
+<span class="">  25           &#x27;focusflow&#x27;,</span>
+<span class="">  26           maxLines: 1,</span>
+<span class="">  27           overflow: TextOverflow.ellipsis,</span>
+<span class="">  28           style: TextStyle(</span>
+<span class="">  29             fontWeight: FontWeight.w800,</span>
+<span class="">  30             fontSize: 22,</span>
+<span class="">  31             letterSpacing: -.8,</span>
+<span class="">  32           ),</span>
+<span class="">  33         ),</span>
+<span class="">  34       ),</span>
+<span class="">  35     ],</span>
+<span class="">  36   );</span>
+<span class="">  37 }</span>
+</pre></details><details><summary>lib/ui/screens/home_screen.dart — 95/107 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;../../domain/task.dart&#x27;;</span>
+<span class="">   5 import &#x27;../formatters.dart&#x27;;</span>
+<span class="">   6 import &#x27;../widgets/widgets.dart&#x27;;</span>
+<span class="">   7 import &#x27;../navigation.dart&#x27;;</span>
+<span class="">   8 import &#x27;tasks_screen.dart&#x27;;</span>
+<span class="">   9 </span>
+<span class="">  10 class HomeScreen extends StatelessWidget {</span>
+<span class="hit">  11   const HomeScreen({</span>
+<span class="">  12     super.key,</span>
+<span class="">  13     required this.controller,</span>
+<span class="">  14     required this.onTasks,</span>
+<span class="">  15   });</span>
+<span class="">  16   final AppController controller;</span>
+<span class="">  17   final VoidCallback onTasks;</span>
+<span class="hit">  18   @override</span>
+<span class="">  19   Widget build(BuildContext context) {</span>
+<span class="hit">  20     final l = AppLocalizations.of(context);</span>
+<span class="hit">  21     final stats = TaskStats(controller.tasks);</span>
+<span class="hit">  22     final next = filterTasks(</span>
+<span class="hit">  23       controller.tasks,</span>
+<span class="">  24       filter: TaskFilter.pending,</span>
+<span class="hit">  25     ).take(3).toList();</span>
+<span class="hit">  26     return PageBody(</span>
+<span class="hit">  27       children: [</span>
+<span class="hit">  28         Row(</span>
+<span class="">  29           mainAxisAlignment: MainAxisAlignment.spaceBetween,</span>
+<span class="hit">  30           children: [</span>
+<span class="hit">  31             Expanded(</span>
+<span class="hit">  32               child: Text(</span>
+<span class="hit">  33                 l.welcome,</span>
+<span class="">  34                 style: const TextStyle(</span>
+<span class="">  35                   fontSize: 11,</span>
+<span class="">  36                   letterSpacing: 2,</span>
+<span class="">  37                   fontWeight: FontWeight.w700,</span>
+<span class="">  38                 ),</span>
+<span class="">  39               ),</span>
+<span class="">  40             ),</span>
+<span class="hit">  41             if (MediaQuery.sizeOf(context).width &gt; 600)</span>
+<span class="hit">  42               Text(</span>
+<span class="hit">  43                 dateLabel(context, controller.clock()),</span>
+<span class="hit">  44                 style: Theme.of(context).textTheme.bodySmall,</span>
+<span class="">  45               ),</span>
+<span class="">  46           ],</span>
+<span class="">  47         ),</span>
+<span class="">  48         const SizedBox(height: 22),</span>
+<span class="hit">  49         Text(l.greeting, style: Theme.of(context).textTheme.headlineLarge),</span>
+<span class="">  50         const SizedBox(height: 12),</span>
+<span class="hit">  51         Text(</span>
+<span class="hit">  52           l.subtitle,</span>
+<span class="hit">  53           style: TextStyle(</span>
+<span class="hit">  54             color: Theme.of(context).colorScheme.onSurfaceVariant,</span>
+<span class="">  55           ),</span>
+<span class="">  56         ),</span>
+<span class="">  57         const SizedBox(height: 28),</span>
+<span class="hit">  58         Container(</span>
+<span class="hit">  59           decoration: BoxDecoration(</span>
+<span class="">  60             color: const Color(0xFF254D3F),</span>
+<span class="hit">  61             borderRadius: BorderRadius.circular(24),</span>
+<span class="">  62           ),</span>
+<span class="">  63           padding: const EdgeInsets.all(28),</span>
+<span class="hit">  64           child: Row(</span>
+<span class="hit">  65             children: [</span>
+<span class="hit">  66               Expanded(</span>
+<span class="hit">  67                 child: Column(</span>
+<span class="">  68                   crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  69                   children: [</span>
+<span class="">  70                     const Icon(</span>
+<span class="">  71                       Icons.wb_sunny_outlined,</span>
+<span class="">  72                       color: Color(0xFFDDE9BE),</span>
+<span class="">  73                       size: 28,</span>
+<span class="">  74                     ),</span>
+<span class="">  75                     const SizedBox(height: 20),</span>
+<span class="hit">  76                     Text(</span>
+<span class="hit">  77                       l.heroTitle,</span>
+<span class="">  78                       style: const TextStyle(</span>
+<span class="">  79                         fontSize: 28,</span>
+<span class="">  80                         fontWeight: FontWeight.w600,</span>
+<span class="">  81                         color: Colors.white,</span>
+<span class="">  82                         letterSpacing: -.7,</span>
+<span class="">  83                       ),</span>
+<span class="">  84                     ),</span>
+<span class="">  85                     const SizedBox(height: 10),</span>
+<span class="hit">  86                     Text(</span>
+<span class="hit">  87                       l.heroBody,</span>
+<span class="">  88                       style: const TextStyle(</span>
+<span class="">  89                         color: Color(0xFFDFE9E3),</span>
+<span class="">  90                         height: 1.6,</span>
+<span class="">  91                       ),</span>
+<span class="">  92                     ),</span>
+<span class="">  93                     const SizedBox(height: 24),</span>
+<span class="hit">  94                     FilledButton.icon(</span>
+<span class="hit">  95                       onPressed: onTasks,</span>
+<span class="hit">  96                       style: FilledButton.styleFrom(</span>
+<span class="">  97                         backgroundColor: const Color(0xFFDDE9BE),</span>
+<span class="">  98                         foregroundColor: const Color(0xFF203F32),</span>
+<span class="">  99                       ),</span>
+<span class=""> 100                       icon: const Icon(Icons.arrow_forward_rounded, size: 18),</span>
+<span class="hit"> 101                       label: Text(l.heroAction),</span>
+<span class=""> 102                     ),</span>
+<span class=""> 103                   ],</span>
+<span class=""> 104                 ),</span>
+<span class=""> 105               ),</span>
+<span class="hit"> 106               if (MediaQuery.sizeOf(context).width &gt; 1050)</span>
+<span class="hit"> 107                 const Padding(</span>
+<span class=""> 108                   padding: EdgeInsets.all(28),</span>
+<span class=""> 109                   child: ExcludeSemantics(</span>
+<span class=""> 110                     child: Icon(</span>
+<span class=""> 111                       Icons.spa_rounded,</span>
+<span class=""> 112                       color: Color(0xFF99B69C),</span>
+<span class=""> 113                       size: 136,</span>
+<span class=""> 114                     ),</span>
+<span class=""> 115                   ),</span>
+<span class=""> 116                 ),</span>
+<span class=""> 117             ],</span>
+<span class=""> 118           ),</span>
+<span class=""> 119         ),</span>
+<span class=""> 120         const SizedBox(height: 24),</span>
+<span class="hit"> 121         LayoutBuilder(</span>
+<span class="hit"> 122           builder: (context, constraints) =&gt; Wrap(</span>
+<span class=""> 123             spacing: 12,</span>
+<span class=""> 124             runSpacing: 12,</span>
+<span class="hit"> 125             children: [</span>
+<span class="hit"> 126               for (final data in [</span>
+<span class="hit"> 127                 (l.total, stats.total, Icons.layers_outlined),</span>
+<span class="hit"> 128                 (l.pending, stats.pending, Icons.timelapse_rounded),</span>
+<span class="hit"> 129                 (l.completed, stats.completed, Icons.task_alt_rounded),</span>
+<span class=""> 130               ])</span>
+<span class="hit"> 131                 SizedBox(</span>
+<span class="hit"> 132                   width: constraints.maxWidth &lt; 350</span>
+<span class="miss"> 133                       ? constraints.maxWidth</span>
+<span class="hit"> 134                       : (constraints.maxWidth - 24) / 3,</span>
+<span class="hit"> 135                   child: StatCard(</span>
+<span class=""> 136                     label: data.$1,</span>
+<span class="hit"> 137                     value: &#x27;${data.$2}&#x27;,</span>
+<span class=""> 138                     icon: data.$3,</span>
+<span class=""> 139                   ),</span>
+<span class=""> 140                 ),</span>
+<span class=""> 141             ],</span>
+<span class=""> 142           ),</span>
+<span class=""> 143         ),</span>
+<span class=""> 144         const SizedBox(height: 30),</span>
+<span class="hit"> 145         Row(</span>
+<span class=""> 146           mainAxisAlignment: MainAxisAlignment.spaceBetween,</span>
+<span class="hit"> 147           children: [</span>
+<span class="hit"> 148             Expanded(</span>
+<span class="hit"> 149               child: Text(</span>
+<span class="hit"> 150                 l.today,</span>
+<span class="hit"> 151                 style: Theme.of(context).textTheme.titleLarge,</span>
+<span class=""> 152               ),</span>
+<span class=""> 153             ),</span>
+<span class="hit"> 154             TextButton(onPressed: onTasks, child: Text(l.seeAll)),</span>
+<span class=""> 155           ],</span>
+<span class=""> 156         ),</span>
+<span class=""> 157         const SizedBox(height: 14),</span>
+<span class="hit"> 158         if (next.isEmpty) const EmptyState(filtered: false),</span>
+<span class="hit"> 159         ...next.map(</span>
+<span class="hit"> 160           (task) =&gt; TaskTile(</span>
+<span class=""> 161             task: task,</span>
+<span class="hit"> 162             now: controller.clock(),</span>
+<span class="hit"> 163             busy: controller.busy,</span>
+<span class="miss"> 164             onToggle: () =&gt; controller.toggle(task.id),</span>
+<span class="miss"> 165             onOpen: () =&gt; openTask(context, controller, task.id),</span>
+<span class=""> 166           ),</span>
+<span class=""> 167         ),</span>
+<span class="hit"> 168         const SizedBox(height: 24),</span>
+<span class="hit"> 169         Text(l.spaces, style: Theme.of(context).textTheme.titleLarge),</span>
+<span class="hit"> 170         const SizedBox(height: 18),</span>
+<span class=""> 171         // These image widgets are created and decoded only when the lazy list reaches them.</span>
+<span class="hit"> 172         LayoutBuilder(</span>
+<span class="hit"> 173           builder: (context, constraints) =&gt; Wrap(</span>
+<span class=""> 174             spacing: 16,</span>
+<span class=""> 175             runSpacing: 16,</span>
+<span class="hit"> 176             children: [</span>
+<span class="hit"> 177               for (final category in [</span>
+<span class=""> 178                 TaskCategory.work,</span>
+<span class=""> 179                 TaskCategory.wellbeing,</span>
+<span class=""> 180               ])</span>
+<span class="hit"> 181                 SizedBox(</span>
+<span class="hit"> 182                   width: constraints.maxWidth &lt; 500</span>
+<span class="miss"> 183                       ? constraints.maxWidth</span>
+<span class="hit"> 184                       : (constraints.maxWidth - 16) / 2,</span>
+<span class="hit"> 185                   child: _SpaceCard(category: category, controller: controller),</span>
+<span class=""> 186                 ),</span>
+<span class=""> 187             ],</span>
+<span class=""> 188           ),</span>
+<span class=""> 189         ),</span>
+<span class="hit"> 190         const SizedBox(height: 24),</span>
+<span class="hit"> 191         Text(l.demoNotice, style: Theme.of(context).textTheme.bodySmall),</span>
+<span class="hit"> 192         const SizedBox(height: 20),</span>
+<span class=""> 193       ],</span>
+<span class=""> 194     );</span>
+<span class=""> 195   }</span>
+<span class=""> 196 }</span>
+<span class=""> 197 </span>
+<span class=""> 198 class _SpaceCard extends StatelessWidget {</span>
+<span class="hit"> 199   const _SpaceCard({required this.category, required this.controller});</span>
+<span class=""> 200   final TaskCategory category;</span>
+<span class=""> 201   final AppController controller;</span>
+<span class="hit"> 202   @override</span>
+<span class=""> 203   Widget build(BuildContext context) {</span>
+<span class="hit"> 204     final l = AppLocalizations.of(context);</span>
+<span class="hit"> 205     return Card(</span>
+<span class=""> 206       clipBehavior: Clip.antiAlias,</span>
+<span class="hit"> 207       child: InkWell(</span>
+<span class="miss"> 208         onTap: () =&gt; Navigator.of(context).push(</span>
+<span class="miss"> 209           MaterialPageRoute&lt;void&gt;(</span>
+<span class="miss"> 210             builder: (_) =&gt; Scaffold(</span>
+<span class="miss"> 211               appBar: AppBar(title: Text(categoryLabel(l, category))),</span>
+<span class="miss"> 212               body: TasksScreen(</span>
+<span class="miss"> 213                 controller: controller,</span>
+<span class="miss"> 214                 initialCategory: category,</span>
+<span class=""> 215               ),</span>
+<span class=""> 216             ),</span>
+<span class=""> 217           ),</span>
+<span class=""> 218         ),</span>
+<span class="hit"> 219         child: Column(</span>
+<span class=""> 220           crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit"> 221           children: [</span>
+<span class="hit"> 222             Image.asset(</span>
+<span class="hit"> 223               &#x27;assets/images/${category.name}.webp&#x27;,</span>
+<span class=""> 224               height: 130,</span>
+<span class=""> 225               width: double.infinity,</span>
+<span class=""> 226               fit: BoxFit.cover,</span>
+<span class=""> 227               cacheWidth: 640,</span>
+<span class=""> 228               excludeFromSemantics: true,</span>
+<span class="miss"> 229               errorBuilder: (_, _, _) =&gt; const SizedBox(</span>
+<span class=""> 230                 height: 130,</span>
+<span class=""> 231                 child: Center(child: Icon(Icons.landscape_outlined)),</span>
+<span class=""> 232               ),</span>
+<span class=""> 233             ),</span>
+<span class="hit"> 234             Padding(</span>
+<span class=""> 235               padding: const EdgeInsets.all(18),</span>
+<span class="hit"> 236               child: Row(</span>
+<span class="hit"> 237                 children: [</span>
+<span class="hit"> 238                   Icon(categoryIcon(category)),</span>
+<span class=""> 239                   const SizedBox(width: 12),</span>
+<span class="hit"> 240                   Expanded(</span>
+<span class="hit"> 241                     child: Text(</span>
+<span class="hit"> 242                       categoryLabel(l, category),</span>
+<span class=""> 243                       style: const TextStyle(fontWeight: FontWeight.w600),</span>
+<span class=""> 244                     ),</span>
+<span class=""> 245                   ),</span>
+<span class=""> 246                   const Icon(Icons.arrow_forward_rounded, size: 20),</span>
+<span class=""> 247                 ],</span>
+<span class=""> 248               ),</span>
+<span class=""> 249             ),</span>
+<span class=""> 250           ],</span>
+<span class=""> 251         ),</span>
+<span class=""> 252       ),</span>
+<span class=""> 253     );</span>
+<span class=""> 254   }</span>
+<span class=""> 255 }</span>
+</pre></details><details><summary>lib/ui/screens/tasks_screen.dart — 68/72 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;../../domain/task.dart&#x27;;</span>
+<span class="">   5 import &#x27;../formatters.dart&#x27;;</span>
+<span class="">   6 import &#x27;../widgets/widgets.dart&#x27;;</span>
+<span class="">   7 import &#x27;../navigation.dart&#x27;;</span>
+<span class="">   8 </span>
+<span class="">   9 class TasksScreen extends StatefulWidget {</span>
+<span class="hit">  10   const TasksScreen({</span>
+<span class="">  11     super.key,</span>
+<span class="">  12     required this.controller,</span>
+<span class="">  13     this.initialCategory,</span>
+<span class="">  14   });</span>
+<span class="">  15   final AppController controller;</span>
+<span class="">  16   final TaskCategory? initialCategory;</span>
+<span class="hit">  17   @override</span>
+<span class="hit">  18   State&lt;TasksScreen&gt; createState() =&gt; _TasksScreenState();</span>
+<span class="">  19 }</span>
+<span class="">  20 </span>
+<span class="">  21 class _TasksScreenState extends State&lt;TasksScreen&gt; {</span>
+<span class="">  22   String query = &#x27;&#x27;;</span>
+<span class="">  23   TaskFilter filter = TaskFilter.all;</span>
+<span class="hit">  24   late TaskCategory? category = widget.initialCategory;</span>
+<span class="hit">  25   @override</span>
+<span class="hit">  26   Widget build(BuildContext context) =&gt; ListenableBuilder(</span>
+<span class="hit">  27     listenable: widget.controller,</span>
+<span class="hit">  28     builder: (context, _) {</span>
+<span class="hit">  29       final l = AppLocalizations.of(context);</span>
+<span class="hit">  30       final tasks = filterTasks(</span>
+<span class="hit">  31         widget.controller.tasks,</span>
+<span class="hit">  32         query: query,</span>
+<span class="hit">  33         filter: filter,</span>
+<span class="hit">  34         category: category,</span>
+<span class="">  35       );</span>
+<span class="hit">  36       return Align(</span>
+<span class="">  37         alignment: Alignment.topCenter,</span>
+<span class="hit">  38         child: ConstrainedBox(</span>
+<span class="">  39           constraints: const BoxConstraints(maxWidth: 1200),</span>
+<span class="hit">  40           child: CustomScrollView(</span>
+<span class="hit">  41             slivers: [</span>
+<span class="hit">  42               SliverPadding(</span>
+<span class="">  43                 padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),</span>
+<span class="hit">  44                 sliver: SliverToBoxAdapter(</span>
+<span class="hit">  45                   child: Column(</span>
+<span class="">  46                     crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  47                     children: [</span>
+<span class="hit">  48                       PageHeader(</span>
+<span class="hit">  49                         title: l.tasks,</span>
+<span class="hit">  50                         subtitle: l.countTasks(tasks.length),</span>
+<span class="hit">  51                         action: FilledButton.icon(</span>
+<span class="">  52                           key: const Key(&#x27;createTask&#x27;),</span>
+<span class="miss">  53                           onPressed: () =&gt;</span>
+<span class="miss">  54                               openEditor(context, widget.controller),</span>
+<span class="">  55                           icon: const Icon(Icons.add, size: 20),</span>
+<span class="hit">  56                           label: Text(l.newTask),</span>
+<span class="">  57                         ),</span>
+<span class="">  58                       ),</span>
+<span class="hit">  59                       TextField(</span>
+<span class="">  60                         key: const Key(&#x27;search&#x27;),</span>
+<span class="hit">  61                         onChanged: (value) =&gt; setState(() =&gt; query = value),</span>
+<span class="hit">  62                         decoration: InputDecoration(</span>
+<span class="hit">  63                           labelText: l.search,</span>
+<span class="">  64                           prefixIcon: const Icon(Icons.search_rounded),</span>
+<span class="">  65                         ),</span>
+<span class="">  66                       ),</span>
+<span class="">  67                       const SizedBox(height: 18),</span>
+<span class="hit">  68                       Wrap(</span>
+<span class="">  69                         spacing: 8,</span>
+<span class="">  70                         runSpacing: 8,</span>
+<span class="hit">  71                         children: [</span>
+<span class="hit">  72                           for (final f in TaskFilter.values)</span>
+<span class="hit">  73                             FilterChip(</span>
+<span class="hit">  74                               key: Key(&#x27;filter-${f.name}&#x27;),</span>
+<span class="hit">  75                               label: Text(switch (f) {</span>
+<span class="hit">  76                                 TaskFilter.all =&gt; l.all,</span>
+<span class="hit">  77                                 TaskFilter.pending =&gt; l.pending,</span>
+<span class="hit">  78                                 TaskFilter.completed =&gt; l.completed,</span>
+<span class="">  79                               }),</span>
+<span class="hit">  80                               selected: filter == f,</span>
+<span class="hit">  81                               onSelected: (_) =&gt; setState(() =&gt; filter = f),</span>
+<span class="">  82                             ),</span>
+<span class="">  83                         ],</span>
+<span class="">  84                       ),</span>
+<span class="">  85                       const SizedBox(height: 8),</span>
+<span class="hit">  86                       Wrap(</span>
+<span class="">  87                         spacing: 8,</span>
+<span class="">  88                         runSpacing: 8,</span>
+<span class="hit">  89                         children: [</span>
+<span class="hit">  90                           ChoiceChip(</span>
+<span class="hit">  91                             label: Text(l.all),</span>
+<span class="hit">  92                             selected: category == null,</span>
+<span class="miss">  93                             onSelected: (_) =&gt; setState(() =&gt; category = null),</span>
+<span class="">  94                           ),</span>
+<span class="hit">  95                           for (final c in TaskCategory.values)</span>
+<span class="hit">  96                             ChoiceChip(</span>
+<span class="hit">  97                               label: Text(categoryLabel(l, c)),</span>
+<span class="hit">  98                               selected: category == c,</span>
+<span class="miss">  99                               onSelected: (_) =&gt; setState(() =&gt; category = c),</span>
+<span class=""> 100                             ),</span>
+<span class=""> 101                         ],</span>
+<span class=""> 102                       ),</span>
+<span class=""> 103                       const SizedBox(height: 16),</span>
+<span class=""> 104                     ],</span>
+<span class=""> 105                   ),</span>
+<span class=""> 106                 ),</span>
+<span class=""> 107               ),</span>
+<span class="hit"> 108               if (tasks.isEmpty)</span>
+<span class="hit"> 109                 SliverToBoxAdapter(</span>
+<span class="hit"> 110                   child: EmptyState(</span>
+<span class=""> 111                     filtered:</span>
+<span class="hit"> 112                         query.isNotEmpty ||</span>
+<span class="hit"> 113                         filter != TaskFilter.all ||</span>
+<span class="hit"> 114                         category != null,</span>
+<span class=""> 115                   ),</span>
+<span class=""> 116                 ),</span>
+<span class="hit"> 117               SliverPadding(</span>
+<span class=""> 118                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),</span>
+<span class="hit"> 119                 sliver: SliverList.builder(</span>
+<span class="hit"> 120                   itemCount: tasks.length,</span>
+<span class="hit"> 121                   itemBuilder: (context, index) =&gt; TaskTile(</span>
+<span class="hit"> 122                     key: ValueKey(tasks[index].id),</span>
+<span class="hit"> 123                     task: tasks[index],</span>
+<span class="hit"> 124                     now: widget.controller.clock(),</span>
+<span class="hit"> 125                     busy: widget.controller.busy,</span>
+<span class="hit"> 126                     onToggle: () =&gt; widget.controller.toggle(tasks[index].id),</span>
+<span class="hit"> 127                     onOpen: () =&gt;</span>
+<span class="hit"> 128                         openTask(context, widget.controller, tasks[index].id),</span>
+<span class=""> 129                   ),</span>
+<span class=""> 130                 ),</span>
+<span class=""> 131               ),</span>
+<span class=""> 132             ],</span>
+<span class=""> 133           ),</span>
+<span class=""> 134         ),</span>
+<span class=""> 135       );</span>
+<span class=""> 136     },</span>
+<span class=""> 137   );</span>
+<span class=""> 138 }</span>
+</pre></details><details><summary>lib/ui/screens/stats_screen.dart — 50/50 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;../../domain/task.dart&#x27;;</span>
+<span class="">   5 import &#x27;../formatters.dart&#x27;;</span>
+<span class="">   6 import &#x27;../widgets/widgets.dart&#x27;;</span>
+<span class="">   7 </span>
+<span class="">   8 class StatsScreen extends StatelessWidget {</span>
+<span class="hit">   9   const StatsScreen({super.key, required this.controller});</span>
+<span class="">  10   final AppController controller;</span>
+<span class="hit">  11   @override</span>
+<span class="">  12   Widget build(BuildContext context) {</span>
+<span class="hit">  13     final l = AppLocalizations.of(context);</span>
+<span class="hit">  14     final stats = TaskStats(controller.tasks);</span>
+<span class="hit">  15     return PageBody(</span>
+<span class="hit">  16       children: [</span>
+<span class="hit">  17         PageHeader(title: l.stats, subtitle: l.statsSubtitle),</span>
+<span class="hit">  18         Card(</span>
+<span class="hit">  19           child: Padding(</span>
+<span class="">  20             padding: const EdgeInsets.all(28),</span>
+<span class="hit">  21             child: Column(</span>
+<span class="">  22               crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  23               children: [</span>
+<span class="hit">  24                 Text(l.completionRate),</span>
+<span class="">  25                 const SizedBox(height: 14),</span>
+<span class="hit">  26                 Text(</span>
+<span class="hit">  27                   &#x27;${(stats.progress * 100).round()} %&#x27;,</span>
+<span class="hit">  28                   style: Theme.of(context).textTheme.headlineLarge,</span>
+<span class="">  29                 ),</span>
+<span class="">  30                 const SizedBox(height: 24),</span>
+<span class="hit">  31                 Semantics(</span>
+<span class="hit">  32                   label: l.completionRate,</span>
+<span class="hit">  33                   value: &#x27;${(stats.progress * 100).round()} %&#x27;,</span>
+<span class="hit">  34                   child: LinearProgressIndicator(</span>
+<span class="hit">  35                     value: stats.progress,</span>
+<span class="">  36                     minHeight: 12,</span>
+<span class="hit">  37                     borderRadius: BorderRadius.circular(12),</span>
+<span class="">  38                   ),</span>
+<span class="">  39                 ),</span>
+<span class="">  40                 const SizedBox(height: 16),</span>
+<span class="hit">  41                 Text(&#x27;${stats.completed} / ${stats.total} · ${l.completed}&#x27;),</span>
+<span class="">  42               ],</span>
+<span class="">  43             ),</span>
+<span class="">  44           ),</span>
+<span class="">  45         ),</span>
+<span class="">  46         const SizedBox(height: 32),</span>
+<span class="hit">  47         Text(l.byCategory, style: Theme.of(context).textTheme.titleLarge),</span>
+<span class="">  48         const SizedBox(height: 18),</span>
+<span class="hit">  49         for (final category in TaskCategory.values)</span>
+<span class="hit">  50           _CategoryProgress(category: category, tasks: controller.tasks),</span>
+<span class="hit">  51         const SizedBox(height: 24),</span>
+<span class="hit">  52         Text(</span>
+<span class="hit">  53           l.statsNote,</span>
+<span class="hit">  54           style: TextStyle(</span>
+<span class="hit">  55             color: Theme.of(context).colorScheme.onSurfaceVariant,</span>
+<span class="">  56           ),</span>
+<span class="">  57         ),</span>
+<span class="">  58       ],</span>
+<span class="">  59     );</span>
+<span class="">  60   }</span>
+<span class="">  61 }</span>
+<span class="">  62 </span>
+<span class="">  63 class _CategoryProgress extends StatelessWidget {</span>
+<span class="hit">  64   const _CategoryProgress({required this.category, required this.tasks});</span>
+<span class="">  65   final TaskCategory category;</span>
+<span class="">  66   final List&lt;Task&gt; tasks;</span>
+<span class="hit">  67   @override</span>
+<span class="">  68   Widget build(BuildContext context) {</span>
+<span class="hit">  69     final l = AppLocalizations.of(context);</span>
+<span class="hit">  70     final stats = TaskStats(</span>
+<span class="hit">  71       tasks.where((t) =&gt; t.category == category).toList(),</span>
+<span class="">  72     );</span>
+<span class="hit">  73     return Padding(</span>
+<span class="">  74       padding: const EdgeInsets.only(bottom: 12),</span>
+<span class="hit">  75       child: Card(</span>
+<span class="hit">  76         child: Padding(</span>
+<span class="">  77           padding: const EdgeInsets.all(22),</span>
+<span class="hit">  78           child: Column(</span>
+<span class="hit">  79             children: [</span>
+<span class="hit">  80               Row(</span>
+<span class="hit">  81                 children: [</span>
+<span class="hit">  82                   Icon(categoryIcon(category)),</span>
+<span class="">  83                   const SizedBox(width: 12),</span>
+<span class="hit">  84                   Expanded(child: Text(categoryLabel(l, category))),</span>
+<span class="hit">  85                   Text(&#x27;${stats.completed} / ${stats.total}&#x27;),</span>
+<span class="">  86                 ],</span>
+<span class="">  87               ),</span>
+<span class="">  88               const SizedBox(height: 18),</span>
+<span class="hit">  89               LinearProgressIndicator(</span>
+<span class="hit">  90                 value: stats.progress,</span>
+<span class="">  91                 minHeight: 8,</span>
+<span class="hit">  92                 borderRadius: BorderRadius.circular(8),</span>
+<span class="hit">  93                 semanticsLabel: categoryLabel(l, category),</span>
+<span class="hit">  94                 semanticsValue: &#x27;${(stats.progress * 100).round()}&#x27;,</span>
+<span class="">  95               ),</span>
+<span class="">  96             ],</span>
+<span class="">  97           ),</span>
+<span class="">  98         ),</span>
+<span class="">  99       ),</span>
+<span class=""> 100     );</span>
+<span class=""> 101   }</span>
+<span class=""> 102 }</span>
+</pre></details><details><summary>lib/ui/screens/settings_screen.dart — 40/40 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;../widgets/widgets.dart&#x27;;</span>
+<span class="">   5 </span>
+<span class="">   6 class SettingsScreen extends StatelessWidget {</span>
+<span class="hit">   7   const SettingsScreen({super.key, required this.controller});</span>
+<span class="">   8   final AppController controller;</span>
+<span class="hit">   9   @override</span>
+<span class="">  10   Widget build(BuildContext context) {</span>
+<span class="hit">  11     final l = AppLocalizations.of(context);</span>
+<span class="hit">  12     return PageBody(</span>
+<span class="hit">  13       children: [</span>
+<span class="hit">  14         PageHeader(title: l.settings, subtitle: l.settingsSubtitle),</span>
+<span class="hit">  15         Card(</span>
+<span class="hit">  16           child: Padding(</span>
+<span class="">  17             padding: const EdgeInsets.all(24),</span>
+<span class="hit">  18             child: Column(</span>
+<span class="">  19               crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  20               children: [</span>
+<span class="hit">  21                 Text(l.language, style: Theme.of(context).textTheme.titleLarge),</span>
+<span class="">  22                 const SizedBox(height: 16),</span>
+<span class="hit">  23                 Wrap(</span>
+<span class="">  24                   spacing: 12,</span>
+<span class="hit">  25                   children: [</span>
+<span class="hit">  26                     for (final language in [&#x27;fr&#x27;, &#x27;en&#x27;])</span>
+<span class="hit">  27                       ChoiceChip(</span>
+<span class="hit">  28                         key: Key(&#x27;language-$language&#x27;),</span>
+<span class="hit">  29                         label: Text(language == &#x27;fr&#x27; ? &#x27;Français&#x27; : &#x27;English&#x27;),</span>
+<span class="hit">  30                         selected: controller.snapshot.language == language,</span>
+<span class="hit">  31                         onSelected: controller.busy</span>
+<span class="">  32                             ? null</span>
+<span class="hit">  33                             : (_) =&gt; controller.setLanguage(language),</span>
+<span class="">  34                       ),</span>
+<span class="">  35                   ],</span>
+<span class="">  36                 ),</span>
+<span class="">  37                 const SizedBox(height: 24),</span>
+<span class="">  38                 const Divider(),</span>
+<span class="">  39                 const SizedBox(height: 16),</span>
+<span class="hit">  40                 Text(</span>
+<span class="hit">  41                   l.appearance,</span>
+<span class="hit">  42                   style: Theme.of(context).textTheme.titleLarge,</span>
+<span class="">  43                 ),</span>
+<span class="hit">  44                 SwitchListTile(</span>
+<span class="">  45                   key: const Key(&#x27;darkMode&#x27;),</span>
+<span class="">  46                   contentPadding: EdgeInsets.zero,</span>
+<span class="hit">  47                   title: Text(l.darkMode),</span>
+<span class="hit">  48                   subtitle: Text(l.themeHint),</span>
+<span class="hit">  49                   value: controller.snapshot.dark,</span>
+<span class="hit">  50                   onChanged: controller.busy ? null : controller.setDark,</span>
+<span class="">  51                 ),</span>
+<span class="">  52               ],</span>
+<span class="">  53             ),</span>
+<span class="">  54           ),</span>
+<span class="">  55         ),</span>
+<span class="">  56         const SizedBox(height: 24),</span>
+<span class="hit">  57         Card(</span>
+<span class="hit">  58           child: Padding(</span>
+<span class="">  59             padding: const EdgeInsets.all(24),</span>
+<span class="hit">  60             child: Column(</span>
+<span class="">  61               crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  62               children: [</span>
+<span class="hit">  63                 Icon(</span>
+<span class="">  64                   Icons.lock_outline,</span>
+<span class="hit">  65                   color: Theme.of(context).colorScheme.primary,</span>
+<span class="">  66                 ),</span>
+<span class="">  67                 const SizedBox(height: 16),</span>
+<span class="hit">  68                 Text(</span>
+<span class="hit">  69                   l.localFirst,</span>
+<span class="hit">  70                   style: Theme.of(context).textTheme.titleLarge,</span>
+<span class="">  71                 ),</span>
+<span class="">  72                 const SizedBox(height: 12),</span>
+<span class="hit">  73                 Text(l.privacyBody),</span>
+<span class="">  74               ],</span>
+<span class="">  75             ),</span>
+<span class="">  76           ),</span>
+<span class="">  77         ),</span>
+<span class="">  78         const SizedBox(height: 32),</span>
+<span class="hit">  79         Text(l.about, style: Theme.of(context).textTheme.titleLarge),</span>
+<span class="">  80         const SizedBox(height: 12),</span>
+<span class="hit">  81         Text(l.version),</span>
+<span class="">  82       ],</span>
+<span class="">  83     );</span>
+<span class="">  84   }</span>
+<span class="">  85 }</span>
+</pre></details><details><summary>lib/ui/formatters.dart — 14/14 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;package:intl/intl.dart&#x27;;</span>
+<span class="">   3 import &#x27;../domain/task.dart&#x27;;</span>
+<span class="">   4 import &#x27;../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   5 </span>
+<span class="hit">   6 String categoryLabel(AppLocalizations l, TaskCategory c) =&gt; switch (c) {</span>
+<span class="hit">   7   TaskCategory.work =&gt; l.work,</span>
+<span class="hit">   8   TaskCategory.personal =&gt; l.personal,</span>
+<span class="hit">   9   TaskCategory.wellbeing =&gt; l.wellbeing,</span>
+<span class="">  10 };</span>
+<span class="hit">  11 String priorityLabel(AppLocalizations l, TaskPriority p) =&gt; switch (p) {</span>
+<span class="hit">  12   TaskPriority.low =&gt; l.low,</span>
+<span class="hit">  13   TaskPriority.medium =&gt; l.medium,</span>
+<span class="hit">  14   TaskPriority.high =&gt; l.high,</span>
+<span class="">  15 };</span>
+<span class="hit">  16 IconData categoryIcon(TaskCategory c) =&gt; switch (c) {</span>
+<span class="hit">  17   TaskCategory.work =&gt; Icons.work_outline_rounded,</span>
+<span class="hit">  18   TaskCategory.personal =&gt; Icons.auto_awesome_outlined,</span>
+<span class="hit">  19   TaskCategory.wellbeing =&gt; Icons.spa_outlined,</span>
+<span class="">  20 };</span>
+<span class="hit">  21 String dateLabel(BuildContext context, DateTime date) =&gt;</span>
+<span class="hit">  22     DateFormat.yMMMd(Localizations.localeOf(context).languageCode).format(date);</span>
+</pre></details><details><summary>lib/ui/screens/task_editor_screen.dart — 85/96 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;../../domain/task.dart&#x27;;</span>
+<span class="">   5 import &#x27;../formatters.dart&#x27;;</span>
+<span class="">   6 </span>
+<span class="">   7 class TaskEditorScreen extends StatefulWidget {</span>
+<span class="hit">   8   const TaskEditorScreen({super.key, required this.controller, this.task});</span>
+<span class="">   9   final AppController controller;</span>
+<span class="">  10   final Task? task;</span>
+<span class="hit">  11   @override</span>
+<span class="hit">  12   State&lt;TaskEditorScreen&gt; createState() =&gt; _TaskEditorScreenState();</span>
+<span class="">  13 }</span>
+<span class="">  14 </span>
+<span class="">  15 class _TaskEditorScreenState extends State&lt;TaskEditorScreen&gt; {</span>
+<span class="">  16   final form = GlobalKey&lt;FormState&gt;();</span>
+<span class="hit">  17   late final TextEditingController title = TextEditingController(</span>
+<span class="hit">  18     text: widget.task?.title,</span>
+<span class="">  19   );</span>
+<span class="hit">  20   late final TextEditingController notes = TextEditingController(</span>
+<span class="hit">  21     text: widget.task?.notes,</span>
+<span class="">  22   );</span>
+<span class="hit">  23   late TaskCategory category = widget.task?.category ?? TaskCategory.work;</span>
+<span class="hit">  24   late TaskPriority priority = widget.task?.priority ?? TaskPriority.medium;</span>
+<span class="hit">  25   late DateTime date = widget.task?.dueDate ?? widget.controller.clock();</span>
+<span class="">  26   bool saving = false;</span>
+<span class="">  27   bool failed = false;</span>
+<span class="hit">  28   @override</span>
+<span class="">  29   void dispose() {</span>
+<span class="hit">  30     title.dispose();</span>
+<span class="hit">  31     notes.dispose();</span>
+<span class="hit">  32     super.dispose();</span>
+<span class="">  33   }</span>
+<span class="">  34 </span>
+<span class="hit">  35   Future&lt;void&gt; save() async {</span>
+<span class="hit">  36     if (!form.currentState!.validate() || saving) return;</span>
+<span class="hit">  37     setState(() {</span>
+<span class="hit">  38       saving = true;</span>
+<span class="hit">  39       failed = false;</span>
+<span class="">  40     });</span>
+<span class="hit">  41     final ok = await widget.controller.saveTask(</span>
+<span class="hit">  42       id: widget.task?.id,</span>
+<span class="hit">  43       title: title.text,</span>
+<span class="hit">  44       notes: notes.text,</span>
+<span class="hit">  45       category: category,</span>
+<span class="hit">  46       priority: priority,</span>
+<span class="hit">  47       dueDate: date,</span>
+<span class="">  48     );</span>
+<span class="hit">  49     if (!mounted) return;</span>
+<span class="">  50     if (ok) {</span>
+<span class="hit">  51       Navigator.of(context).pop();</span>
+<span class="">  52     } else {</span>
+<span class="hit">  53       setState(() {</span>
+<span class="hit">  54         saving = false;</span>
+<span class="hit">  55         failed = true;</span>
+<span class="">  56       });</span>
+<span class="">  57     }</span>
+<span class="">  58   }</span>
+<span class="">  59 </span>
+<span class="hit">  60   @override</span>
+<span class="">  61   Widget build(BuildContext context) {</span>
+<span class="hit">  62     final l = AppLocalizations.of(context);</span>
+<span class="hit">  63     return Scaffold(</span>
+<span class="hit">  64       appBar: AppBar(title: Text(widget.task == null ? l.newTask : l.editTask)),</span>
+<span class="hit">  65       body: Align(</span>
+<span class="">  66         alignment: Alignment.topCenter,</span>
+<span class="hit">  67         child: ConstrainedBox(</span>
+<span class="">  68           constraints: const BoxConstraints(maxWidth: 720),</span>
+<span class="hit">  69           child: SingleChildScrollView(</span>
+<span class="">  70             padding: const EdgeInsets.all(24),</span>
+<span class="hit">  71             child: Form(</span>
+<span class="hit">  72               key: form,</span>
+<span class="hit">  73               child: Column(</span>
+<span class="">  74                 crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  75                 children: [</span>
+<span class="">  76                   const SizedBox(height: 12),</span>
+<span class="hit">  77                   Text(</span>
+<span class="hit">  78                     l.heroTitle,</span>
+<span class="hit">  79                     style: Theme.of(context).textTheme.headlineMedium,</span>
+<span class="">  80                   ),</span>
+<span class="">  81                   const SizedBox(height: 28),</span>
+<span class="hit">  82                   TextFormField(</span>
+<span class="">  83                     key: const Key(&#x27;titleField&#x27;),</span>
+<span class="hit">  84                     controller: title,</span>
+<span class="">  85                     maxLength: 100,</span>
+<span class="">  86                     textCapitalization: TextCapitalization.sentences,</span>
+<span class="hit">  87                     decoration: InputDecoration(labelText: l.title),</span>
+<span class="hit">  88                     validator: (value) =&gt; switch (validateTitle(value)) {</span>
+<span class="hit">  89                       &#x27;required&#x27; =&gt; l.requiredTitle,</span>
+<span class="hit">  90                       &#x27;tooLong&#x27; =&gt; l.longTitle,</span>
+<span class="">  91                       _ =&gt; null,</span>
+<span class="">  92                     },</span>
+<span class="">  93                   ),</span>
+<span class="">  94                   const SizedBox(height: 16),</span>
+<span class="hit">  95                   TextFormField(</span>
+<span class="">  96                     key: const Key(&#x27;notesField&#x27;),</span>
+<span class="hit">  97                     controller: notes,</span>
+<span class="">  98                     maxLines: 4,</span>
+<span class="">  99                     maxLength: 2000,</span>
+<span class="hit"> 100                     decoration: InputDecoration(labelText: l.notes),</span>
+<span class="hit"> 101                     validator: (value) =&gt;</span>
+<span class="hit"> 102                         (value?.length ?? 0) &gt; 2000 ? l.longNotes : null,</span>
+<span class=""> 103                   ),</span>
+<span class=""> 104                   const SizedBox(height: 16),</span>
+<span class="hit"> 105                   DropdownButtonFormField&lt;TaskCategory&gt;(</span>
+<span class="hit"> 106                     initialValue: category,</span>
+<span class=""> 107                     isExpanded: true,</span>
+<span class="hit"> 108                     decoration: InputDecoration(labelText: l.category),</span>
+<span class=""> 109                     items: TaskCategory.values</span>
+<span class="hit"> 110                         .map(</span>
+<span class="hit"> 111                           (c) =&gt; DropdownMenuItem(</span>
+<span class=""> 112                             value: c,</span>
+<span class="hit"> 113                             child: Text(categoryLabel(l, c)),</span>
+<span class=""> 114                           ),</span>
+<span class=""> 115                         )</span>
+<span class="hit"> 116                         .toList(),</span>
+<span class="miss"> 117                     onChanged: (c) =&gt; setState(() =&gt; category = c!),</span>
+<span class=""> 118                   ),</span>
+<span class=""> 119                   const SizedBox(height: 20),</span>
+<span class="hit"> 120                   DropdownButtonFormField&lt;TaskPriority&gt;(</span>
+<span class="hit"> 121                     initialValue: priority,</span>
+<span class=""> 122                     isExpanded: true,</span>
+<span class="hit"> 123                     decoration: InputDecoration(labelText: l.priority),</span>
+<span class=""> 124                     items: TaskPriority.values</span>
+<span class="hit"> 125                         .map(</span>
+<span class="hit"> 126                           (p) =&gt; DropdownMenuItem(</span>
+<span class=""> 127                             value: p,</span>
+<span class="hit"> 128                             child: Text(priorityLabel(l, p)),</span>
+<span class=""> 129                           ),</span>
+<span class=""> 130                         )</span>
+<span class="hit"> 131                         .toList(),</span>
+<span class="miss"> 132                     onChanged: (p) =&gt; setState(() =&gt; priority = p!),</span>
+<span class=""> 133                   ),</span>
+<span class=""> 134                   const SizedBox(height: 20),</span>
+<span class="hit"> 135                   OutlinedButton.icon(</span>
+<span class=""> 136                     icon: const Icon(Icons.calendar_month_outlined),</span>
+<span class="hit"> 137                     label: Text(&#x27;${l.dueDate} · ${dateLabel(context, date)}&#x27;),</span>
+<span class="miss"> 138                     onPressed: () async {</span>
+<span class="miss"> 139                       final picked = await showDatePicker(</span>
+<span class=""> 140                         context: context,</span>
+<span class="miss"> 141                         initialDate: date,</span>
+<span class="miss"> 142                         firstDate: DateTime(</span>
+<span class="miss"> 143                           date.year &lt; 2020 ? date.year : 2020,</span>
+<span class=""> 144                         ),</span>
+<span class="miss"> 145                         lastDate: DateTime(</span>
+<span class="miss"> 146                           date.year &gt; 2100 ? date.year : 2100,</span>
+<span class=""> 147                           12,</span>
+<span class=""> 148                           31,</span>
+<span class=""> 149                         ),</span>
+<span class=""> 150                       );</span>
+<span class="miss"> 151                       if (picked != null &amp;&amp; mounted) {</span>
+<span class="miss"> 152                         setState(() =&gt; date = picked);</span>
+<span class=""> 153                       }</span>
+<span class=""> 154                     },</span>
+<span class=""> 155                   ),</span>
+<span class="hit"> 156                   if (failed)</span>
+<span class="hit"> 157                     Padding(</span>
+<span class=""> 158                       padding: const EdgeInsets.only(top: 16),</span>
+<span class="hit"> 159                       child: Text(</span>
+<span class="hit"> 160                         l.saveError,</span>
+<span class="hit"> 161                         style: TextStyle(</span>
+<span class="hit"> 162                           color: Theme.of(context).colorScheme.error,</span>
+<span class=""> 163                         ),</span>
+<span class=""> 164                       ),</span>
+<span class=""> 165                     ),</span>
+<span class="hit"> 166                   const SizedBox(height: 30),</span>
+<span class="hit"> 167                   SizedBox(</span>
+<span class=""> 168                     width: double.infinity,</span>
+<span class="hit"> 169                     child: FilledButton.icon(</span>
+<span class=""> 170                       key: const Key(&#x27;saveTask&#x27;),</span>
+<span class="hit"> 171                       onPressed: saving ? null : save,</span>
+<span class="hit"> 172                       icon: saving</span>
+<span class=""> 173                           ? const SizedBox(</span>
+<span class=""> 174                               width: 18,</span>
+<span class=""> 175                               height: 18,</span>
+<span class=""> 176                               child: CircularProgressIndicator(strokeWidth: 2),</span>
+<span class=""> 177                             )</span>
+<span class=""> 178                           : const Icon(Icons.check_rounded),</span>
+<span class="hit"> 179                       label: Text(l.save),</span>
+<span class=""> 180                     ),</span>
+<span class=""> 181                   ),</span>
+<span class="hit"> 182                   const SizedBox(height: 24),</span>
+<span class=""> 183                 ],</span>
+<span class=""> 184               ),</span>
+<span class=""> 185             ),</span>
+<span class=""> 186           ),</span>
+<span class=""> 187         ),</span>
+<span class=""> 188       ),</span>
+<span class=""> 189     );</span>
+<span class=""> 190   }</span>
+<span class=""> 191 }</span>
+</pre></details><details><summary>lib/ui/screens/task_detail_screen.dart — 64/67 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../../state/app_controller.dart&#x27;;</span>
+<span class="">   4 import &#x27;../formatters.dart&#x27;;</span>
+<span class="">   5 import &#x27;../widgets/widgets.dart&#x27;;</span>
+<span class="">   6 import &#x27;../navigation.dart&#x27;;</span>
+<span class="">   7 </span>
+<span class="">   8 class TaskDetailScreen extends StatelessWidget {</span>
+<span class="hit">   9   const TaskDetailScreen({</span>
+<span class="">  10     super.key,</span>
+<span class="">  11     required this.controller,</span>
+<span class="">  12     required this.id,</span>
+<span class="">  13   });</span>
+<span class="">  14   final AppController controller;</span>
+<span class="">  15   final String id;</span>
+<span class="hit">  16   @override</span>
+<span class="hit">  17   Widget build(BuildContext context) =&gt; ListenableBuilder(</span>
+<span class="hit">  18     listenable: controller,</span>
+<span class="hit">  19     builder: (context, _) {</span>
+<span class="hit">  20       final l = AppLocalizations.of(context);</span>
+<span class="hit">  21       final matches = controller.tasks.where((t) =&gt; t.id == id);</span>
+<span class="hit">  22       if (matches.isEmpty) {</span>
+<span class="hit">  23         return Scaffold(</span>
+<span class="hit">  24           appBar: AppBar(),</span>
+<span class="hit">  25           body: Center(child: Text(l.taskMissing)),</span>
+<span class="">  26         );</span>
+<span class="">  27       }</span>
+<span class="hit">  28       final task = matches.first;</span>
+<span class="hit">  29       return Scaffold(</span>
+<span class="hit">  30         appBar: AppBar(</span>
+<span class="hit">  31           title: Text(l.taskDetail),</span>
+<span class="hit">  32           actions: [</span>
+<span class="hit">  33             IconButton(</span>
+<span class="">  34               key: const Key(&#x27;editTask&#x27;),</span>
+<span class="hit">  35               tooltip: l.editTask,</span>
+<span class="hit">  36               onPressed: controller.busy</span>
+<span class="">  37                   ? null</span>
+<span class="hit">  38                   : () =&gt; openEditor(context, controller, task: task),</span>
+<span class="">  39               icon: const Icon(Icons.edit_outlined),</span>
+<span class="">  40             ),</span>
+<span class="">  41           ],</span>
+<span class="">  42         ),</span>
+<span class="hit">  43         body: PageBody(</span>
+<span class="hit">  44           children: [</span>
+<span class="hit">  45             Icon(</span>
+<span class="hit">  46               categoryIcon(task.category),</span>
+<span class="">  47               size: 48,</span>
+<span class="hit">  48               color: Theme.of(context).colorScheme.primary,</span>
+<span class="">  49             ),</span>
+<span class="">  50             const SizedBox(height: 24),</span>
+<span class="hit">  51             Text(task.title, style: Theme.of(context).textTheme.headlineLarge),</span>
+<span class="">  52             const SizedBox(height: 24),</span>
+<span class="hit">  53             Wrap(</span>
+<span class="">  54               spacing: 12,</span>
+<span class="">  55               runSpacing: 8,</span>
+<span class="hit">  56               children: [</span>
+<span class="hit">  57                 Chip(label: Text(categoryLabel(l, task.category))),</span>
+<span class="hit">  58                 Chip(label: Text(priorityLabel(l, task.priority))),</span>
+<span class="hit">  59                 Chip(label: Text(dateLabel(context, task.dueDate))),</span>
+<span class="">  60               ],</span>
+<span class="">  61             ),</span>
+<span class="">  62             const SizedBox(height: 24),</span>
+<span class="hit">  63             Card(</span>
+<span class="hit">  64               child: Padding(</span>
+<span class="">  65                 padding: const EdgeInsets.all(24),</span>
+<span class="hit">  66                 child: Text(</span>
+<span class="hit">  67                   task.notes.isEmpty ? l.noNotes : task.notes,</span>
+<span class="hit">  68                   style: Theme.of(context).textTheme.bodyLarge,</span>
+<span class="">  69                 ),</span>
+<span class="">  70               ),</span>
+<span class="">  71             ),</span>
+<span class="">  72             const SizedBox(height: 28),</span>
+<span class="hit">  73             if (controller.error == AppFailure.save)</span>
+<span class="miss">  74               Text(</span>
+<span class="miss">  75                 l.saveError,</span>
+<span class="miss">  76                 style: TextStyle(color: Theme.of(context).colorScheme.error),</span>
+<span class="">  77               ),</span>
+<span class="hit">  78             FilledButton.icon(</span>
+<span class="">  79               key: const Key(&#x27;completeTask&#x27;),</span>
+<span class="hit">  80               onPressed: controller.busy ? null : () =&gt; controller.toggle(id),</span>
+<span class="hit">  81               icon: Icon(task.completed ? Icons.undo : Icons.check),</span>
+<span class="hit">  82               label: Text(task.completed ? l.markPending : l.markDone),</span>
+<span class="">  83             ),</span>
+<span class="hit">  84             const SizedBox(height: 20),</span>
+<span class="hit">  85             TextButton.icon(</span>
+<span class="">  86               key: const Key(&#x27;deleteTask&#x27;),</span>
+<span class="hit">  87               onPressed: controller.busy</span>
+<span class="">  88                   ? null</span>
+<span class="hit">  89                   : () async {</span>
+<span class="hit">  90                       final confirmed = await showDialog&lt;bool&gt;(</span>
+<span class="">  91                         context: context,</span>
+<span class="hit">  92                         builder: (context) =&gt; AlertDialog(</span>
+<span class="hit">  93                           title: Text(l.deleteTitle),</span>
+<span class="hit">  94                           content: Text(l.deleteBody),</span>
+<span class="hit">  95                           actions: [</span>
+<span class="hit">  96                             TextButton(</span>
+<span class="hit">  97                               onPressed: () =&gt; Navigator.pop(context, false),</span>
+<span class="hit">  98                               child: Text(l.cancel),</span>
+<span class="">  99                             ),</span>
+<span class="hit"> 100                             FilledButton(</span>
+<span class=""> 101                               key: const Key(&#x27;confirmDelete&#x27;),</span>
+<span class="hit"> 102                               onPressed: () =&gt; Navigator.pop(context, true),</span>
+<span class="hit"> 103                               child: Text(l.delete),</span>
+<span class=""> 104                             ),</span>
+<span class=""> 105                           ],</span>
+<span class=""> 106                         ),</span>
+<span class=""> 107                       );</span>
+<span class="hit"> 108                       if (confirmed == true) {</span>
+<span class="hit"> 109                         final ok = await controller.delete(id);</span>
+<span class="hit"> 110                         if (ok &amp;&amp; context.mounted) Navigator.of(context).pop();</span>
+<span class=""> 111                       }</span>
+<span class=""> 112                     },</span>
+<span class="hit"> 113               icon: Icon(</span>
+<span class=""> 114                 Icons.delete_outline,</span>
+<span class="hit"> 115                 color: Theme.of(context).colorScheme.error,</span>
+<span class=""> 116               ),</span>
+<span class="hit"> 117               label: Text(</span>
+<span class="hit"> 118                 l.delete,</span>
+<span class="hit"> 119                 style: TextStyle(color: Theme.of(context).colorScheme.error),</span>
+<span class=""> 120               ),</span>
+<span class=""> 121             ),</span>
+<span class=""> 122           ],</span>
+<span class=""> 123         ),</span>
+<span class=""> 124       );</span>
+<span class=""> 125     },</span>
+<span class=""> 126   );</span>
+<span class=""> 127 }</span>
+</pre></details><details><summary>lib/ui/widgets/empty_state.dart — 14/14 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 </span>
+<span class="">   4 class EmptyState extends StatelessWidget {</span>
+<span class="hit">   5   const EmptyState({super.key, required this.filtered});</span>
+<span class="">   6   final bool filtered;</span>
+<span class="hit">   7   @override</span>
+<span class="">   8   Widget build(BuildContext context) {</span>
+<span class="hit">   9     final l = AppLocalizations.of(context);</span>
+<span class="hit">  10     return Padding(</span>
+<span class="">  11       padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),</span>
+<span class="hit">  12       child: Column(</span>
+<span class="hit">  13         children: [</span>
+<span class="hit">  14           Icon(</span>
+<span class="hit">  15             filtered ? Icons.search_off_rounded : Icons.check_circle_outline,</span>
+<span class="">  16             size: 52,</span>
+<span class="hit">  17             color: Theme.of(context).colorScheme.primary,</span>
+<span class="">  18           ),</span>
+<span class="">  19           const SizedBox(height: 20),</span>
+<span class="hit">  20           Text(</span>
+<span class="hit">  21             filtered ? l.noResults : l.emptyTitle,</span>
+<span class="hit">  22             style: Theme.of(context).textTheme.titleLarge,</span>
+<span class="">  23           ),</span>
+<span class="">  24           const SizedBox(height: 8),</span>
+<span class="hit">  25           Text(</span>
+<span class="hit">  26             filtered ? l.noResultsBody : l.emptyBody,</span>
+<span class="">  27             textAlign: TextAlign.center,</span>
+<span class="">  28           ),</span>
+<span class="">  29         ],</span>
+<span class="">  30       ),</span>
+<span class="">  31     );</span>
+<span class="">  32   }</span>
+<span class="">  33 }</span>
+</pre></details><details><summary>lib/ui/widgets/page_body.dart — 9/9 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 </span>
+<span class="">   3 class PageBody extends StatelessWidget {</span>
+<span class="hit">   4   const PageBody({super.key, required this.children});</span>
+<span class="">   5   final List&lt;Widget&gt; children;</span>
+<span class="hit">   6   @override</span>
+<span class="hit">   7   Widget build(BuildContext context) =&gt; Align(</span>
+<span class="">   8     alignment: Alignment.topCenter,</span>
+<span class="hit">   9     child: ConstrainedBox(</span>
+<span class="">  10       constraints: const BoxConstraints(maxWidth: 1200),</span>
+<span class="hit">  11       child: ListView.builder(</span>
+<span class="hit">  12         padding: EdgeInsets.all(</span>
+<span class="hit">  13           MediaQuery.sizeOf(context).width &lt; 600 ? 20 : 40,</span>
+<span class="">  14         ),</span>
+<span class="hit">  15         itemCount: children.length,</span>
+<span class="hit">  16         itemBuilder: (context, i) =&gt; children[i],</span>
+<span class="">  17       ),</span>
+<span class="">  18     ),</span>
+<span class="">  19   );</span>
+<span class="">  20 }</span>
+</pre></details><details><summary>lib/ui/widgets/page_header.dart — 15/15 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 </span>
+<span class="">   3 class PageHeader extends StatelessWidget {</span>
+<span class="hit">   4   const PageHeader({</span>
+<span class="">   5     super.key,</span>
+<span class="">   6     required this.title,</span>
+<span class="">   7     this.subtitle,</span>
+<span class="">   8     this.action,</span>
+<span class="">   9   });</span>
+<span class="">  10   final String title;</span>
+<span class="">  11   final String? subtitle;</span>
+<span class="">  12   final Widget? action;</span>
+<span class="hit">  13   @override</span>
+<span class="hit">  14   Widget build(BuildContext context) =&gt; Padding(</span>
+<span class="">  15     padding: const EdgeInsets.only(bottom: 28),</span>
+<span class="hit">  16     child: Wrap(</span>
+<span class="">  17       alignment: WrapAlignment.spaceBetween,</span>
+<span class="">  18       crossAxisAlignment: WrapCrossAlignment.center,</span>
+<span class="">  19       spacing: 20,</span>
+<span class="">  20       runSpacing: 16,</span>
+<span class="hit">  21       children: [</span>
+<span class="hit">  22         Column(</span>
+<span class="">  23           crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  24           children: [</span>
+<span class="hit">  25             Text(title, style: Theme.of(context).textTheme.headlineMedium),</span>
+<span class="hit">  26             if (subtitle != null)</span>
+<span class="hit">  27               Padding(</span>
+<span class="">  28                 padding: const EdgeInsets.only(top: 8),</span>
+<span class="hit">  29                 child: Text(</span>
+<span class="hit">  30                   subtitle!,</span>
+<span class="hit">  31                   style: TextStyle(</span>
+<span class="hit">  32                     color: Theme.of(context).colorScheme.onSurfaceVariant,</span>
+<span class="">  33                   ),</span>
+<span class="">  34                 ),</span>
+<span class="">  35               ),</span>
+<span class="">  36           ],</span>
+<span class="">  37         ),</span>
+<span class="hit">  38         ?action,</span>
+<span class="">  39       ],</span>
+<span class="">  40     ),</span>
+<span class="">  41   );</span>
+<span class="">  42 }</span>
+</pre></details><details><summary>lib/ui/widgets/stat_card.dart — 9/9 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 </span>
+<span class="">   3 class StatCard extends StatelessWidget {</span>
+<span class="hit">   4   const StatCard({</span>
+<span class="">   5     super.key,</span>
+<span class="">   6     required this.label,</span>
+<span class="">   7     required this.value,</span>
+<span class="">   8     required this.icon,</span>
+<span class="">   9   });</span>
+<span class="">  10   final String label;</span>
+<span class="">  11   final String value;</span>
+<span class="">  12   final IconData icon;</span>
+<span class="hit">  13   @override</span>
+<span class="hit">  14   Widget build(BuildContext context) =&gt; Card(</span>
+<span class="hit">  15     child: Padding(</span>
+<span class="">  16       padding: const EdgeInsets.all(20),</span>
+<span class="hit">  17       child: Column(</span>
+<span class="">  18         crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  19         children: [</span>
+<span class="hit">  20           Icon(icon, size: 22, color: Theme.of(context).colorScheme.primary),</span>
+<span class="">  21           const SizedBox(height: 16),</span>
+<span class="hit">  22           Text(value, style: Theme.of(context).textTheme.headlineMedium),</span>
+<span class="">  23           const SizedBox(height: 4),</span>
+<span class="hit">  24           Text(label),</span>
+<span class="">  25         ],</span>
+<span class="">  26       ),</span>
+<span class="">  27     ),</span>
+<span class="">  28   );</span>
+<span class="">  29 }</span>
+</pre></details><details><summary>lib/ui/widgets/task_tile.dart — 46/50 lignes</summary><pre><span class="">   1 import &#x27;package:flutter/material.dart&#x27;;</span>
+<span class="">   2 import &#x27;../../l10n/app_localizations.dart&#x27;;</span>
+<span class="">   3 import &#x27;../../domain/task.dart&#x27;;</span>
+<span class="">   4 import &#x27;../formatters.dart&#x27;;</span>
+<span class="">   5 </span>
+<span class="">   6 class TaskTile extends StatelessWidget {</span>
+<span class="hit">   7   const TaskTile({</span>
+<span class="">   8     super.key,</span>
+<span class="">   9     required this.task,</span>
+<span class="">  10     required this.now,</span>
+<span class="">  11     required this.busy,</span>
+<span class="">  12     required this.onToggle,</span>
+<span class="">  13     required this.onOpen,</span>
+<span class="">  14   });</span>
+<span class="">  15   final Task task;</span>
+<span class="">  16   final DateTime now;</span>
+<span class="">  17   final bool busy;</span>
+<span class="">  18   final VoidCallback onToggle;</span>
+<span class="">  19   final VoidCallback onOpen;</span>
+<span class="hit">  20   @override</span>
+<span class="">  21   Widget build(BuildContext context) {</span>
+<span class="hit">  22     final l = AppLocalizations.of(context);</span>
+<span class="hit">  23     final scheme = Theme.of(context).colorScheme;</span>
+<span class="hit">  24     return Padding(</span>
+<span class="">  25       padding: const EdgeInsets.only(bottom: 10),</span>
+<span class="hit">  26       child: Card(</span>
+<span class="hit">  27         child: Row(</span>
+<span class="hit">  28           children: [</span>
+<span class="">  29             const SizedBox(width: 8),</span>
+<span class="hit">  30             Semantics(</span>
+<span class="hit">  31               label: task.completed</span>
+<span class="hit">  32                   ? l.reopenTask(task.title)</span>
+<span class="hit">  33                   : l.completeTask(task.title),</span>
+<span class="hit">  34               child: Checkbox(</span>
+<span class="hit">  35                 key: Key(&#x27;toggle-${task.id}&#x27;),</span>
+<span class="hit">  36                 value: task.completed,</span>
+<span class="hit">  37                 onChanged: busy ? null : (_) =&gt; onToggle(),</span>
+<span class="">  38               ),</span>
+<span class="">  39             ),</span>
+<span class="hit">  40             Expanded(</span>
+<span class="hit">  41               child: Semantics(</span>
+<span class="hit">  42                 label: l.openTask(task.title),</span>
+<span class="">  43                 button: true,</span>
+<span class="hit">  44                 child: InkWell(</span>
+<span class="hit">  45                   key: Key(&#x27;task-${task.id}&#x27;),</span>
+<span class="hit">  46                   borderRadius: BorderRadius.circular(20),</span>
+<span class="hit">  47                   onTap: onOpen,</span>
+<span class="hit">  48                   child: Padding(</span>
+<span class="">  49                     padding: const EdgeInsets.fromLTRB(8, 18, 16, 18),</span>
+<span class="hit">  50                     child: Column(</span>
+<span class="">  51                       crossAxisAlignment: CrossAxisAlignment.start,</span>
+<span class="hit">  52                       children: [</span>
+<span class="hit">  53                         Text(</span>
+<span class="hit">  54                           task.title,</span>
+<span class="hit">  55                           style: TextStyle(</span>
+<span class="">  56                             fontWeight: FontWeight.w600,</span>
+<span class="">  57                             fontSize: 15,</span>
+<span class="hit">  58                             decoration: task.completed</span>
+<span class="">  59                                 ? TextDecoration.lineThrough</span>
+<span class="">  60                                 : null,</span>
+<span class="">  61                           ),</span>
+<span class="">  62                         ),</span>
+<span class="">  63                         const SizedBox(height: 8),</span>
+<span class="hit">  64                         Wrap(</span>
+<span class="">  65                           spacing: 12,</span>
+<span class="">  66                           runSpacing: 6,</span>
+<span class="">  67                           crossAxisAlignment: WrapCrossAlignment.center,</span>
+<span class="hit">  68                           children: [</span>
+<span class="hit">  69                             Text(</span>
+<span class="hit">  70                               categoryLabel(l, task.category),</span>
+<span class="hit">  71                               style: TextStyle(</span>
+<span class="hit">  72                                 color: scheme.primary,</span>
+<span class="">  73                                 fontSize: 12,</span>
+<span class="">  74                                 fontWeight: FontWeight.w600,</span>
+<span class="">  75                               ),</span>
+<span class="">  76                             ),</span>
+<span class="hit">  77                             Text(</span>
+<span class="hit">  78                               dateLabel(context, task.dueDate),</span>
+<span class="hit">  79                               style: TextStyle(</span>
+<span class="hit">  80                                 color: scheme.onSurfaceVariant,</span>
+<span class="">  81                                 fontSize: 12,</span>
+<span class="">  82                               ),</span>
+<span class="">  83                             ),</span>
+<span class="hit">  84                             if (task.isOverdue(now))</span>
+<span class="miss">  85                               Text(</span>
+<span class="miss">  86                                 l.overdue,</span>
+<span class="miss">  87                                 style: TextStyle(</span>
+<span class="miss">  88                                   color: scheme.error,</span>
+<span class="">  89                                   fontSize: 12,</span>
+<span class="">  90                                 ),</span>
+<span class="">  91                               ),</span>
+<span class="hit">  92                             if (task.priority == TaskPriority.high)</span>
+<span class="hit">  93                               Text(</span>
+<span class="hit">  94                                 &#x27;↑ ${l.high}&#x27;,</span>
+<span class="hit">  95                                 style: TextStyle(</span>
+<span class="hit">  96                                   color: scheme.onSurfaceVariant,</span>
+<span class="">  97                                   fontSize: 12,</span>
+<span class="">  98                                 ),</span>
+<span class="">  99                               ),</span>
+<span class=""> 100                           ],</span>
+<span class=""> 101                         ),</span>
+<span class=""> 102                       ],</span>
+<span class=""> 103                     ),</span>
+<span class=""> 104                   ),</span>
+<span class=""> 105                 ),</span>
+<span class=""> 106               ),</span>
+<span class=""> 107             ),</span>
+<span class=""> 108             const Padding(</span>
+<span class=""> 109               padding: EdgeInsets.only(right: 16),</span>
+<span class=""> 110               child: Icon(Icons.chevron_right_rounded, size: 20),</span>
+<span class=""> 111             ),</span>
+<span class=""> 112           ],</span>
+<span class=""> 113         ),</span>
+<span class=""> 114       ),</span>
+<span class=""> 115     );</span>
+<span class=""> 116   }</span>
+<span class=""> 117 }</span>
+</pre></details></html>

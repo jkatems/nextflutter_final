@@ -1,0 +1,155 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":32871,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"suite","time":1}
+{"test":{"id":1,"name":"loading /home/jkatems/dev/nextflutter/final/test/unit/task_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":2}
+{"suite":{"id":2,"platform":"vm","path":"/home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart"},"type":"suite","time":10}
+{"test":{"id":3,"name":"loading /home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart","suiteID":2,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":10}
+{"count":8,"time":12,"type":"allSuites"}
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":3866}
+{"group":{"id":4,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":13,"line":null,"column":null,"url":null},"type":"group","time":3870}
+{"group":{"id":5,"suiteID":0,"parentID":4,"name":"Task and validation","metadata":{"skip":false,"skipReason":null},"testCount":7,"line":6,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"group","time":3870}
+{"test":{"id":6,"name":"Task and validation JSON roundtrip preserves every field","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":7,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":3871}
+{"testID":6,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3952}
+{"test":{"id":7,"name":"Task and validation copy keeps identity and leaves original immutable","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":11,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":3955}
+{"testID":7,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3965}
+{"test":{"id":8,"name":"Task and validation empty and whitespace title are rejected","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":19,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":3966}
+{"testID":8,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3973}
+{"test":{"id":9,"name":"Task and validation title boundary is 100 characters after trimming","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":23,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":3974}
+{"testID":9,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3984}
+{"test":{"id":10,"name":"Task and validation due today is not overdue even at night","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":27,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":3985}
+{"testID":10,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3994}
+{"test":{"id":11,"name":"Task and validation yesterday is overdue only while pending","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":33,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":3995}
+{"testID":11,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4000}
+{"test":{"id":12,"name":"Task and validation invalid serialized title is rejected","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":38,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":4000}
+{"testID":12,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4006}
+{"group":{"id":13,"suiteID":0,"parentID":4,"name":"Filtering and statistics","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":45,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"group","time":4007}
+{"test":{"id":14,"name":"Filtering and statistics query matches case insensitively with whitespace","suiteID":0,"groupIDs":[4,13],"metadata":{"skip":false,"skipReason":null},"line":61,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":4007}
+{"testID":14,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4016}
+{"test":{"id":15,"name":"Filtering and statistics query also searches notes","suiteID":0,"groupIDs":[4,13],"metadata":{"skip":false,"skipReason":null},"line":64,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":4017}
+{"testID":15,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4026}
+{"test":{"id":16,"name":"Filtering and statistics category and completion filters combine","suiteID":0,"groupIDs":[4,13],"metadata":{"skip":false,"skipReason":null},"line":67,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":4027}
+{"testID":16,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4032}
+{"test":{"id":17,"name":"Filtering and statistics sort puts pending tasks first ordered by date","suiteID":0,"groupIDs":[4,13],"metadata":{"skip":false,"skipReason":null},"line":85,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":4033}
+{"testID":17,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4038}
+{"test":{"id":18,"name":"Filtering and statistics empty stats never divide by zero","suiteID":0,"groupIDs":[4,13],"metadata":{"skip":false,"skipReason":null},"line":89,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":4039}
+{"testID":18,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4047}
+{"test":{"id":19,"name":"Filtering and statistics stats reflect completed and pending totals","suiteID":0,"groupIDs":[4,13],"metadata":{"skip":false,"skipReason":null},"line":94,"column":5,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/task_test.dart"},"type":"testStart","time":4048}
+{"testID":19,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4054}
+{"suite":{"id":20,"platform":"vm","path":"/home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"suite","time":4999}
+{"test":{"id":21,"name":"loading /home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart","suiteID":20,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":4999}
+{"testID":3,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":5125}
+{"group":{"id":22,"suiteID":2,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":7,"line":null,"column":null,"url":null},"type":"group","time":5126}
+{"test":{"id":23,"name":"fresh storage returns null","suiteID":2,"groupIDs":[22],"metadata":{"skip":false,"skipReason":null},"line":11,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart"},"type":"testStart","time":5126}
+{"testID":23,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5180}
+{"test":{"id":24,"name":"real preferences adapter persists tasks and settings","suiteID":2,"groupIDs":[22],"metadata":{"skip":false,"skipReason":null},"line":19,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart"},"type":"testStart","time":5181}
+{"testID":24,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5250}
+{"test":{"id":25,"name":"empty list is preserved and does not reseed demo","suiteID":2,"groupIDs":[22],"metadata":{"skip":false,"skipReason":null},"line":30,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart"},"type":"testStart","time":5252}
+{"testID":25,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5264}
+{"test":{"id":26,"name":"corrupt persisted data raises without overwriting it","suiteID":2,"groupIDs":[22],"metadata":{"skip":false,"skipReason":null},"line":37,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart"},"type":"testStart","time":5265}
+{"testID":26,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5284}
+{"test":{"id":27,"name":"unknown schema is rejected","suiteID":2,"groupIDs":[22],"metadata":{"skip":false,"skipReason":null},"line":46,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart"},"type":"testStart","time":5284}
+{"testID":27,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5291}
+{"test":{"id":28,"name":"duplicate task identifiers are rejected","suiteID":2,"groupIDs":[22],"metadata":{"skip":false,"skipReason":null},"line":49,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart"},"type":"testStart","time":5291}
+{"testID":28,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5300}
+{"test":{"id":29,"name":"snapshot list cannot be externally mutated","suiteID":2,"groupIDs":[22],"metadata":{"skip":false,"skipReason":null},"line":62,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/repository_test.dart"},"type":"testStart","time":5302}
+{"testID":29,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5320}
+{"testID":21,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":6334}
+{"group":{"id":30,"suiteID":20,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":12,"line":null,"column":null,"url":null},"type":"group","time":6335}
+{"test":{"id":31,"name":"first launch saves initial sample once","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":21,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6336}
+{"testID":31,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6412}
+{"test":{"id":32,"name":"add trims title and persists","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":30,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6412}
+{"testID":32,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6423}
+{"test":{"id":33,"name":"blank task is rejected without save","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":37,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6424}
+{"testID":33,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6432}
+{"test":{"id":34,"name":"long notes are rejected","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":44,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6433}
+{"testID":34,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6440}
+{"test":{"id":35,"name":"IDs remain unique with a frozen clock","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":49,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6441}
+{"testID":35,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6455}
+{"test":{"id":36,"name":"editing preserves completion and ID","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":56,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6455}
+{"testID":36,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6463}
+{"test":{"id":37,"name":"unknown IDs do not insert or delete other tasks","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":63,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6463}
+{"testID":37,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6472}
+{"test":{"id":38,"name":"toggle and delete persist correctly","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":71,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6473}
+{"testID":38,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6490}
+{"test":{"id":39,"name":"failed write keeps previous state and permits retry","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":81,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6491}
+{"testID":39,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6514}
+{"test":{"id":40,"name":"read error preserves repository and blocks mutation until retry","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":94,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6515}
+{"testID":40,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6525}
+{"test":{"id":41,"name":"language and theme survive controller recreation","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":110,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6526}
+{"testID":41,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6533}
+{"test":{"id":42,"name":"simultaneous saves cannot overwrite each other","suiteID":20,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":122,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/controller_test.dart"},"type":"testStart","time":6533}
+{"suite":{"id":43,"platform":"vm","path":"/home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart"},"type":"suite","time":6547}
+{"test":{"id":44,"name":"loading /home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart","suiteID":43,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":6548}
+{"testID":42,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6550}
+{"suite":{"id":45,"platform":"vm","path":"/home/jkatems/dev/nextflutter/final/test/unit/storage_isolation_test.dart"},"type":"suite","time":7663}
+{"test":{"id":46,"name":"loading /home/jkatems/dev/nextflutter/final/test/unit/storage_isolation_test.dart","suiteID":45,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":7663}
+{"testID":44,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":7669}
+{"group":{"id":47,"suiteID":43,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":7,"line":null,"column":null,"url":null},"type":"group","time":7670}
+{"test":{"id":48,"name":"save error dismissal notifies UI without writing","suiteID":43,"groupIDs":[47],"metadata":{"skip":false,"skipReason":null},"line":21,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart"},"type":"testStart","time":7670}
+{"testID":48,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7747}
+{"test":{"id":49,"name":"read failure cannot be dismissed to bypass recovery","suiteID":43,"groupIDs":[47],"metadata":{"skip":false,"skipReason":null},"line":35,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart"},"type":"testStart","time":7748}
+{"testID":49,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7753}
+{"test":{"id":50,"name":"task updates do not notify application theme or locale","suiteID":43,"groupIDs":[47],"metadata":{"skip":false,"skipReason":null},"line":43,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart"},"type":"testStart","time":7754}
+{"testID":50,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7779}
+{"test":{"id":51,"name":"initial snapshot is injected and respects the injected clock","suiteID":43,"groupIDs":[47],"metadata":{"skip":false,"skipReason":null},"line":55,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart"},"type":"testStart","time":7780}
+{"testID":51,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7785}
+{"test":{"id":52,"name":"controller default has no dependency on demo data","suiteID":43,"groupIDs":[47],"metadata":{"skip":false,"skipReason":null},"line":73,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart"},"type":"testStart","time":7786}
+{"testID":52,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7792}
+{"test":{"id":53,"name":"disposing during a write does not notify a disposed listener","suiteID":43,"groupIDs":[47],"metadata":{"skip":false,"skipReason":null},"line":79,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart"},"type":"testStart","time":7793}
+{"testID":53,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7798}
+{"test":{"id":54,"name":"initialization cannot race an in-flight write","suiteID":43,"groupIDs":[47],"metadata":{"skip":false,"skipReason":null},"line":94,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/state_boundaries_test.dart"},"type":"testStart","time":7798}
+{"testID":54,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7803}
+{"suite":{"id":55,"platform":"vm","path":"/home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"suite","time":8699}
+{"test":{"id":56,"name":"loading /home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart","suiteID":55,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":8699}
+{"testID":46,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":9088}
+{"group":{"id":57,"suiteID":45,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":9089}
+{"test":{"id":58,"name":"integration and benchmark storage never overwrite user data","suiteID":45,"groupIDs":[57],"metadata":{"skip":false,"skipReason":null},"line":9,"column":3,"url":"file:///home/jkatems/dev/nextflutter/final/test/unit/storage_isolation_test.dart"},"type":"testStart","time":9089}
+{"testID":58,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":9301}
+{"suite":{"id":59,"platform":"vm","path":"/home/jkatems/dev/nextflutter/final/test/widgets/accessibility_test.dart"},"type":"suite","time":10141}
+{"test":{"id":60,"name":"loading /home/jkatems/dev/nextflutter/final/test/widgets/accessibility_test.dart","suiteID":59,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":10141}
+{"testID":60,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":11153}
+{"group":{"id":61,"suiteID":59,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":5,"line":null,"column":null,"url":null},"type":"group","time":11154}
+{"test":{"id":62,"name":"six screens expose labels, touch targets and contrast: fr / dark=false","suiteID":59,"groupIDs":[61],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":18,"root_column":7,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/accessibility_test.dart"},"type":"testStart","time":11155}
+{"testID":62,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":14450}
+{"test":{"id":63,"name":"six screens expose labels, touch targets and contrast: fr / dark=true","suiteID":59,"groupIDs":[61],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":18,"root_column":7,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/accessibility_test.dart"},"type":"testStart","time":14450}
+{"testID":63,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":15547}
+{"test":{"id":64,"name":"six screens expose labels, touch targets and contrast: en / dark=false","suiteID":59,"groupIDs":[61],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":18,"root_column":7,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/accessibility_test.dart"},"type":"testStart","time":15547}
+{"testID":64,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":16484}
+{"test":{"id":65,"name":"six screens expose labels, touch targets and contrast: en / dark=true","suiteID":59,"groupIDs":[61],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":18,"root_column":7,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/accessibility_test.dart"},"type":"testStart","time":16484}
+{"testID":65,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":17378}
+{"test":{"id":66,"name":"completion semantics changes from complete to reopen","suiteID":59,"groupIDs":[61],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":50,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/accessibility_test.dart"},"type":"testStart","time":17379}
+{"testID":66,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":17658}
+{"suite":{"id":67,"platform":"vm","path":"/home/jkatems/dev/nextflutter/final/test/widgets/lazy_loading_test.dart"},"type":"suite","time":18330}
+{"test":{"id":68,"name":"loading /home/jkatems/dev/nextflutter/final/test/widgets/lazy_loading_test.dart","suiteID":67,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":19510}
+{"testID":68,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":29805}
+{"group":{"id":69,"suiteID":67,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":29812}
+{"test":{"id":70,"name":"1000 tasks mount only the visible rows and viewport cache","suiteID":67,"groupIDs":[69],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":9,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/lazy_loading_test.dart"},"type":"testStart","time":29814}
+{"testID":56,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":29940}
+{"group":{"id":71,"suiteID":55,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":13,"line":null,"column":null,"url":null},"type":"group","time":29941}
+{"test":{"id":72,"name":"overview renders and opens task list","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":11,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":29941}
+{"testID":72,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":32821}
+{"test":{"id":73,"name":"blank title shows accessible validation","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":20,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":32821}
+{"testID":70,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":33531}
+{"testID":73,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":33643}
+{"test":{"id":74,"name":"create form persists then closes","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":26,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":33643}
+{"testID":74,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":34498}
+{"test":{"id":75,"name":"search handles no results and matching text","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":37,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":34499}
+{"testID":75,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":35086}
+{"test":{"id":76,"name":"completion filter reacts immediately","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":47,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":35087}
+{"testID":76,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":35574}
+{"test":{"id":77,"name":"language switch translates navigation and content","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":56,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":35575}
+{"testID":77,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":36202}
+{"test":{"id":78,"name":"dark mode changes app theme","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":67,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":36204}
+{"testID":78,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":36596}
+{"test":{"id":79,"name":"delete requires confirmation and cancel preserves data","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":77,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":36597}
+{"testID":79,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":37230}
+{"test":{"id":80,"name":"storage failure keeps editor and user input","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":92,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":37231}
+{"testID":80,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":37679}
+{"test":{"id":81,"name":"all navigation screens fit a 320px display at 200% text","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":103,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":37680}
+{"testID":81,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":38113}
+{"test":{"id":82,"name":"desktop navigation adapts without bottom bar","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":115,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":38114}
+{"testID":82,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":38451}
+{"test":{"id":83,"name":"interactive targets have semantic labels and sufficient size","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":121,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":38452}
+{"testID":83,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":38790}
+{"test":{"id":84,"name":"read failure displays retry and recovers","suiteID":55,"groupIDs":[71],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":136,"root_column":3,"root_url":"file:///home/jkatems/dev/nextflutter/final/test/widgets/app_test.dart"},"type":"testStart","time":38791}
+{"testID":84,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":38937}
+{"success":true,"type":"done","time":39535}

@@ -181,7 +181,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get about => 'À propos';
 
   @override
-  String get version => 'Version 1.2.0 · Fait pour avancer sereinement';
+  String get version => 'Version 1.3.0 · Fait pour avancer sereinement';
 
   @override
   String get settingsSubtitle => 'Un espace qui vous ressemble.';

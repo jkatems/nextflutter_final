@@ -1,45 +1,42 @@
-# Rapport de validation — 28 septembre 2026
+# Rapport de validation — FocusFlow 1.3.0
 
-Environnement : Linux x64, Flutter **3.41.9**, Dart **3.11.5**, Chromium / ChromeDriver **152.0.7977.82**.
+Ce rapport décrit la correction locale du 28 septembre 2026. Environnement : Linux x64, Flutter **3.41.9**, Dart **3.11.5**, Chromium / ChromeDriver **152.0.7977.82**.
 
-| Contrôle | Résultat observé |
+## Résultats de la version corrigée
+
+| Contrôle | Résultat / preuve |
 | --- | --- |
-| Analyse Flutter avec `--fatal-infos` | Aucun problème, warning ou info |
-| Tests unitaires | 32 réussis |
-| Tests widgets | 13 réussis |
-| Couverture métier | 150 / 152 lignes, **98,7 %** |
-| Intégration web, bureau | 2 scénarios réussis, `failureDetails: []` |
-| Intégration web, mobile 430 × 932 | Les mêmes 2 scénarios réussis, captures dans `screenshots/mobile` |
-| Captures réelles | Six écrans, français clair et paramètres anglais sombre, inspectés visuellement |
-| Construction web release | Réussie, CanvasKit embarqué sans CDN |
-| Benchmark Linux natif profile | Réussi : 411 frames, p99 build 2,064 ms / raster 2,474 ms, zéro dépassement des deux budgets |
-| YAML des workflows | Deux fichiers parsés, quatre jobs CI et deux jobs de déploiement |
-| Parité des traductions | 76 messages dans chaque langue, pluriels ICU et dates localisées |
+| Analyse stricte | Aucun problème — [log](quality/analyze.txt) |
+| Tests unitaires | **40 réussis** dans `test/unit/` |
+| Tests widgets | **19 réussis** dans `test/widgets/` |
+| Couverture métier | **165 / 167 lignes, 98,8 %**, contrôleur **100 %** |
+| Accessibilité | Six écrans FR/EN × clair/sombre : libellés, tailles Android/iOS et contraste ; [détails](ACCESSIBILITY.md) |
+| Texte agrandi | Quatre destinations principales en 320 × 800, texte à 200 % |
+| Lazy loading | 1 000 tâches : moins de 25 `TaskTile` montés avant et après défilement |
+| Intégration web | **2 parcours réussis** sur véritable SharedPreferences isolé — [log](quality/integration-web.txt) |
+| Build web release | Réussi, moteur sans CDN — [log](quality/build-web.txt) |
+| Benchmark natif profile | **476 frames**, p99 build **5,844 ms**, raster **5,02 ms**, budgets p99 respectés |
+| Architecture | Contrôleur indépendant du stockage concret, widgets partagés sans contrôleur ; contrôle Python passé |
+| CI/CD | YAML vérifiés : 5 jobs CI et 2 jobs de déploiement ; badge réel ; [diagnostic de la panne Android](CI.md) |
 
-Commandes utilisées :
+## Preuves exportées
 
-```sh
-flutter analyze --no-pub --fatal-infos
-flutter test --no-pub --coverage
-python3 scripts/check_coverage.py
-CHROME_BINARY=/usr/lib64/chromium-browser/chromium-browser \
-CHROMEDRIVER=/tmp/focusflow-webdriver/chromedriver-linux64/chromedriver \
-./scripts/test_web.sh
-flutter build web --release --no-pub --no-web-resources-cdn
-```
+- [Résumé généré](quality/SUMMARY.md), [résultats et empreinte des sources](quality/summary.json).
+- [Flux brut Flutter JSON](quality/tests.jsonl), [JUnit XML](quality/junit.xml).
+- [LCOV brut](quality/lcov.info), [couverture HTML par fichier et ligne](quality/coverage.html).
+- [Captures](screenshots/01-overview-fr.png) : six écrans bureau régénérés après correction ; captures mobiles disponibles depuis la validation précédente.
+- [Benchmark profile natif et détails](PERFORMANCE.md), [données brutes](benchmarks/linux-profile.json).
 
-Le rechargement vérifié par intégration détruit le widget racine et le contrôleur, recharge SharedPreferences puis recrée l’application. Il valide la lecture de la sauvegarde réelle ; ce n’est pas un arrêt/redémarrage du processus OS complet.
+Le rapport automatique répertorie chaque test exécuté : les nombres ne sont pas obtenus en comptant les fonctions du code. L’archive source refuse des sources dont l’empreinte a changé depuis ces tests.
 
-## Corrections issues des tests
+## Ce qui a changé en réponse à l’évaluation
 
-- Texte agrandi : accueil et marque contraints pour éviter les débordements à 320 px / 200 %.
-- Indicateurs de progression : valeur sémantique numérique compatible avec le moteur Flutter.
-- Retour localisé : le test d’intégration cible `BackButton`, sans dépendre du tooltip anglais `Back`.
-- Racine de l’application : écoute séparée des préférences pour éviter les reconstructions de MaterialApp lors des mutations de tâches.
-- Initialisation du stockage : déplacée dans le repository pour afficher une erreur récupérable même si l’accès initial aux préférences échoue.
+Les tests, le CHANGELOG et le premier benchmark existaient dans Git. Aucune preuve ne permet d’affirmer quels fichiers avaient été soumis à l’évaluateur. Une archive web compilée ne contient pas les sources/tests Flutter. La remise inclut maintenant explicitement une archive source avec manifeste, matrice des exigences, rapports exportés et test de présence des éléments obligatoires.
 
-## Limites explicites
+Le contrôleur n’importe plus le dossier data ; le contrat est dans domain. L’UI ne modifie plus directement `error`, les erreurs sont typées, chaque écran a son fichier, et les widgets partagés ont leurs callbacks. Les tests couvrent aussi la destruction du contrôleur pendant une écriture et la prévention d’une course entre chargement et sauvegarde.
 
-Les workflows sont configurés mais n’ont pas été exécutés sur GitHub, aucun dépôt distant n’ayant été fourni. Pas de publication sur un store ni sur GitHub Pages. Les builds/signatures Android et iOS et la recette TalkBack/VoiceOver restent à vérifier sur leurs plateformes. Les tests de layout n’équivalent pas à une certification WCAG exhaustive.
+## Limites
 
-Le scénario `integration_test/performance_test.dart` a passé sur Linux natif, avec ses résultats bruts dans `benchmarks/linux-profile.json`. La garantie de 60 FPS constants sur Android/iOS nécessite une mesure physique dédiée, selon [PERFORMANCE.md](PERFORMANCE.md).
+Le rechargement d’intégration détruit widgets et contrôleur, recharge le vrai stockage puis recrée l’application ; ce n’est pas un arrêt complet du processus OS. Les mesures natives Linux ne certifient pas 60 FPS constants sur les téléphones Android/iOS. La recette TalkBack/VoiceOver, le build iOS et les signatures de distribution mobile nécessitent leurs environnements dédiés.
+
+Les corrections sont locales. L’état distant actuel reste celui du dernier commit poussé ; le badge GitHub changera après un nouveau run. Aucun déploiement ni message externe n’est effectué par cette correction.

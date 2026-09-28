@@ -1,0 +1,24 @@
+Building Linux application...                                   
+✓ Built build/linux/x64/profile/bundle/focus_flow
+VMServiceFlutterDriver: Connecting to Flutter application at http://127.0.0.1:41613/-Ar0kZKGJg8=/
+VMServiceFlutterDriver: Isolate found with number: 1851479033523247
+VMServiceFlutterDriver: Isolate 1851479033523247 is runnable.
+VMServiceFlutterDriver: Isolate is paused at start.
+VMServiceFlutterDriver: Attempting to resume isolate
+00:00 +0: profile a 1000-task list and export real frame timings
+VMServiceFlutterDriver: Connected to Flutter application.
+00:28 +1: (tearDownAll)
+Warning: integration_test plugin was not detected.
+
+If you're running the tests with `flutter drive`, please make sure your tests
+are in the `integration_test/` directory of your package and use
+`flutter test $path_to_test` to run it instead.
+
+If you're running the tests with Android instrumentation or XCTest, this means
+that you are not capturing test results properly! See the following link for
+how to set up the integration_test plugin:
+
+https://docs.flutter.dev/testing/integration-tests
+
+00:28 +2: All tests passed!
+All tests passed.
