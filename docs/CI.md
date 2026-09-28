@@ -22,6 +22,7 @@ Le badge distant ne change qu’après un push suivi d’un nouveau run ; les mo
 - `integration-evidence` : captures et log des deux parcours sur stockage réel isolé.
 - `focusflow-web-release` : build release, après tests et intégration.
 - `focusflow-android-unsigned` : bundle Android non signé, après les tests.
+- `focusflow-android-demo` : APK installable signé avec la clé de développement, pour la démonstration.
 - `focusflow-complete-source` : archive de remise avec manifeste ; télécharge les rapports frais des jobs précédents.
 
 La CI échoue si l’analyse ou le formatage échoue, si les frontières architecturales sont violées, si un test échoue ou est ignoré, si les minima de tests ne sont pas satisfaits, ou si la couverture métier descend sous 90 %.

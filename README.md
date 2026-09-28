@@ -114,6 +114,8 @@ Le script démarre et arrête ChromeDriver, exécute les deux parcours et régé
 
 Les rapports [JSON/JUnit/LCOV et couverture HTML](docs/quality/SUMMARY.md) sont inclus. La couverture métier actuelle est de **98,8 %** (165/167 lignes), avec **100 % des lignes du contrôleur** couvertes. Les preuves et limites de validation sont consignées dans [docs/VALIDATION.md](docs/VALIDATION.md).
 
+Les catalogues [`app_fr.arb`](lib/l10n/app_fr.arb) et [`app_en.arb`](lib/l10n/app_en.arb) contiennent chacun **76 messages**. `python3 scripts/check_localizations.py` vérifie leurs clés, textes et arguments ICU en CI ; son [rapport](docs/quality/localizations.json) complète les tests de bascule de langue et les tests widgets des six écrans dans les deux langues.
+
 ## Performance et accessibilité
 
 Photos **WebP 640 × 400**, embarquées et décodées à la demande avec `cacheWidth`, liste de tâches paresseuse et police locale. Voir les [sources des assets](docs/ASSETS.md).
@@ -131,7 +133,12 @@ Le benchmark Linux natif de cette version a mesuré **476 frames**, avec un p99 
 ```sh
 flutter build web --release --no-pub --no-web-resources-cdn
 flutter build appbundle --release
+# APK installable de démonstration, signé avec la clé de développement :
+flutter build apk --debug
+adb install -r build/app/outputs/flutter-apk/app-debug.apk
 ```
+
+La génération locale de l’APK a échoué lors du téléchargement des dépendances Gradle ; aucun APK n’est inclus dans cette remise ([log](docs/quality/build-android-demo.txt)). La CI est configurée pour joindre l’APK sous l’artefact **`focusflow-android-demo`**. Cet APK sert à la démonstration ; la distribution en boutique nécessite la signature release décrite ci-dessous. Un IPA nécessite macOS, Xcode et une identité de signature Apple.
 
 Consulter [la procédure de production](docs/PRODUCTION.md) pour la signature Android, iOS, l’hébergement, le stockage et les contrôles avant publication. La version web fonctionne sans réseau après chargement, mais sa réouverture hors ligne n’est pas garantie. Les ressources natives sont embarquées.
 

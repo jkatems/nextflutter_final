@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "locales": [
+    "fr",
+    "en"
+  ],
+  "messages_per_locale": 76,
+  "checks": [
+    "locale identifiers",
+    "identical keys",
+    "nonempty translations",
+    "matching ICU arguments"
+  ],
+  "runtime_evidence": "test/widgets/app_test.dart and test/widgets/accessibility_test.dart"
+}

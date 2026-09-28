@@ -19,7 +19,7 @@ required = ['README.md', 'CHANGELOG.md', '.github/workflows/ci.yml', 'pubspec.lo
     'integration_test/performance_test.dart', 'docs/quality/summary.json', 'docs/quality/lcov.info',
     'docs/ACCESSIBILITY.md', 'docs/ARCHITECTURE.md', 'docs/REQUIREMENTS.md',
     'docs/quality/junit.xml', 'docs/quality/coverage.html', 'docs/quality/tests.jsonl',
-    'docs/quality/analyze.txt', 'docs/quality/integration-web.txt',
+    'docs/quality/analyze.txt', 'docs/quality/integration-web.txt', 'docs/quality/localizations.json',
     'docs/benchmarks/linux-profile.json', 'docs/benchmarks/linux-profile-metadata.json']
 quality = json.loads((root / 'docs/quality/summary.json').read_text())
 assert quality['success'], 'Quality report is not successful'

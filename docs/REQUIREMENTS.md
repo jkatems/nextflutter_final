@@ -13,10 +13,11 @@ Le livrable à évaluer est **l’archive source** `focusflow-source-1.3.0.zip`,
 | Images optimisées / lazy | WebP 640 × 400, `cacheWidth: 640`, sections en `ListView.builder` ; tâches en `SliverList.builder` |
 | Rebuilds | Widgets `const`, séparation du notifier des préférences ; test d’absence de notification de thème/langue lors d’une mutation |
 | Accessibilité | `Semantics`, libellés, cibles tactiles Android/iOS et contraste testés sur 6 écrans × 4 variantes ; détails dans `ACCESSIBILITY.md` |
-| FR + EN | ARB, génération Flutter et pluriels ICU, tests de bascule de langue |
+| FR + EN | 76 messages par langue dans `lib/l10n/`, génération Flutter et pluriels ICU, tests de bascule ; rapport `quality/localizations.json` |
 | CI/CD | `.github/workflows/ci.yml`, lint/tests/rapports/builds/archives, `.github/workflows/deploy.yml` pour Pages |
 | Analyse statique propre | Résultat intégral dans `quality/analyze.txt` |
 | README professionnel | Architecture, setup, commandes, captures, badge lié au dépôt GitHub réel, liens vers les preuves |
+| APK / IPA de démonstration | APK configuré en CI ; build local bloqué par les téléchargements Gradle, log `quality/build-android-demo.txt`. IPA non généré (macOS/signature Apple requis). |
 | CHANGELOG ≥ 3 versions | `CHANGELOG.md`, versions 1.0.0, 1.1.0, 1.2.0, 1.3.0 |
 
 Les nombres de tests de cette matrice sont contrôlables dans [le résumé généré](quality/SUMMARY.md). Le [rapport de validation](VALIDATION.md) distingue les vérifications locales, les workflows configurés et les limites de validation sur mobile.

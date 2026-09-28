@@ -12,6 +12,8 @@ Les versions ci-dessous documentent les incréments fonctionnels réalisés pour
 - Badge CI relié au dépôt réel `jkatems/nextflutter_final`.
 
 ### Ajouté
+- Contrôle CI des 76 messages FR/EN et de leurs arguments ICU ; rapport de localisation joint à la remise.
+- Génération CI d’un APK de démonstration installable, distinct du bundle de distribution non signé.
 - Un fichier par écran, répertoire de widgets partagés sans dépendance au contrôleur, thème séparé et point de composition pour injecter les dépendances.
 - Tests des frontières d’état, de l’isolation du stockage, du chargement paresseux et de l’accessibilité sur six écrans en FR/EN et clair/sombre.
 - Exports de preuves : résultats Flutter JSON, JUnit, LCOV, couverture HTML, empreintes SHA-256 des sources.

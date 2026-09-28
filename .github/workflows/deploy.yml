@@ -27,6 +27,7 @@ jobs:
       - run: dart format --output=none --set-exit-if-changed lib test integration_test test_driver
       - run: flutter analyze --fatal-infos --no-pub
       - run: python3 scripts/check_architecture.py
+      - run: python3 scripts/check_localizations.py
       - run: flutter test --no-pub --coverage --reporter=json > docs/quality/tests.jsonl
       - run: python3 scripts/quality_report.py
       - run: python3 scripts/check_coverage.py

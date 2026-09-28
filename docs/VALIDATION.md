@@ -9,11 +9,13 @@ Ce rapport décrit la correction locale du 28 septembre 2026. Environnement : Li
 | Analyse stricte | Aucun problème — [log](quality/analyze.txt) |
 | Tests unitaires | **40 réussis** dans `test/unit/` |
 | Tests widgets | **19 réussis** dans `test/widgets/` |
+| Internationalisation | **76 messages FR et 76 EN**, parité des clés et arguments validée — [rapport](quality/localizations.json) |
 | Couverture métier | **165 / 167 lignes, 98,8 %**, contrôleur **100 %** |
 | Accessibilité | Six écrans FR/EN × clair/sombre : libellés, tailles Android/iOS et contraste ; [détails](ACCESSIBILITY.md) |
 | Texte agrandi | Quatre destinations principales en 320 × 800, texte à 200 % |
 | Lazy loading | 1 000 tâches : moins de 25 `TaskTile` montés avant et après défilement |
 | Intégration web | **2 parcours réussis** sur véritable SharedPreferences isolé — [log](quality/integration-web.txt) |
+| APK de démonstration | Non produit : téléchargements Gradle en échec (`No route to host`, résolution DNS, timeout) — [log](quality/build-android-demo.txt) |
 | Build web release | Réussi, moteur sans CDN — [log](quality/build-web.txt) |
 | Benchmark natif profile | **476 frames**, p99 build **5,844 ms**, raster **5,02 ms**, budgets p99 respectés |
 | Architecture | Contrôleur indépendant du stockage concret, widgets partagés sans contrôleur ; contrôle Python passé |
